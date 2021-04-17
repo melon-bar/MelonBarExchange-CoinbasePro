@@ -1,6 +1,6 @@
 package com.coinbase.model.account;
 
-import com.coinbase.annotation.Field;
+import com.coinbase.annotation.RequestField;
 import com.coinbase.model.request.BaseRequest;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Getter;
 @Builder
 public class AccountsRequest extends BaseRequest {
 
-    @Field(name = "id", type = String.class)
+    @RequestField(index = 0)
     private final String accountId;
 }

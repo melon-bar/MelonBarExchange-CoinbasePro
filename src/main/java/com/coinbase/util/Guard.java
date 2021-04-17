@@ -1,13 +1,14 @@
 package com.coinbase.util;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public final class Guard {
 
-    public static void notNull(final Object ... objects) {
+    public static void nonNull(final Object ... objects) {
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] == null) {
-                throw new NullPointerException(Format.format("Null object found in {} at i={}",
+                Objects.requireNonNull(objects[i], Format.format("Null object found in {} at i={}",
                         Arrays.toString(objects), i));
             }
         }
