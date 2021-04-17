@@ -104,6 +104,8 @@ public class RequestEnrichmentAspect {
 
         // sort in ascending order by index and populate URI
         Arrays.sort(uriParameters);
-        return resource.populateUri(uriParameters);
+        return resource.populateUri(Arrays.stream(uriParameters)
+                .map(UriParameter::value)
+                .toArray(Object[]::new));
     }
 }
