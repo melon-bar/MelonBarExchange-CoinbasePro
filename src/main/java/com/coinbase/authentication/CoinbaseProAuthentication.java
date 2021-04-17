@@ -1,12 +1,11 @@
 package com.coinbase.authentication;
 
-import com.coinbase.client.http.Http;
+import com.coinbase.http.Http;
 import com.coinbase.util.Format;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -55,10 +54,10 @@ public final class CoinbaseProAuthentication implements Authentication {
      *     https://docs.pro.coinbase.com/#generating-an-api-key</a>
      */
     @Override
-    public HttpRequest.Builder enrichHeaders(@NonNull final HttpRequest.Builder httpRequestBuilder,
-                                             @NonNull final String method,
-                                             @NonNull final String uriPath,
-                                             final String body) {
+    public HttpRequest.Builder sign(@NonNull final HttpRequest.Builder httpRequestBuilder,
+                                    @NonNull final String method,
+                                    @NonNull final String uriPath,
+                                    final String body) {
         final String timestamp = Long.toString(DateTime.now().getMillis());
         try {
             return httpRequestBuilder

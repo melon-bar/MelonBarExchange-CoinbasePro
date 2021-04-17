@@ -1,4 +1,4 @@
-package com.coinbase.model.annotation;
+package com.coinbase.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  *  https://www.baeldung.com/java-annotation-processing-builder#:~:text=3.-,Annotation%20Processing%20API,called%20on%20the%20corresponding%20sources.
  */
 @Target(ElementType.FIELD)
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Field {
     String name();
     String description() default "No description.";

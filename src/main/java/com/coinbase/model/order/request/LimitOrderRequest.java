@@ -1,6 +1,6 @@
 package com.coinbase.model.order.request;
 
-import com.coinbase.model.annotation.Required;
+import com.coinbase.annotation.Required;
 import com.coinbase.model.order.flag.TimeInForce;
 
 import lombok.Builder;

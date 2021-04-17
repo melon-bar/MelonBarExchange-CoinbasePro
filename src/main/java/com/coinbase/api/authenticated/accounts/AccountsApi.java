@@ -1,8 +1,8 @@
-package com.coinbase.api.accounts;
+package com.coinbase.api.authenticated.accounts;
 
 import com.coinbase.model.Response;
 import com.coinbase.model.account.AccountsRequest;
-import com.coinbase.model.annotation.Api;
+import com.coinbase.annotation.Api;
 
 @Api("/accounts")
 public interface AccountsApi {

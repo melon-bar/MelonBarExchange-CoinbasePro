@@ -1,6 +1,6 @@
 package com.coinbase.model.account;
 
-import com.coinbase.model.annotation.Field;
+import com.coinbase.annotation.Field;
 import com.coinbase.model.request.BaseRequest;
 import lombok.Builder;
 import lombok.Getter;

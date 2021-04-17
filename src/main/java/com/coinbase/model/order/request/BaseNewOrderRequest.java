@@ -2,7 +2,7 @@ package com.coinbase.model.order.request;
 
 import com.coinbase.model.Product;
 import com.coinbase.model.request.BaseRequest;
-import com.coinbase.model.annotation.Required;
+import com.coinbase.annotation.Required;
 import com.coinbase.model.order.flag.OrderSide;
 import com.coinbase.model.order.flag.OrderStop;
 import com.coinbase.model.order.flag.OrderType;

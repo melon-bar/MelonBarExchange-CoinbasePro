@@ -1,8 +1,9 @@
-package com.coinbase.model.annotation.processor;
+package com.coinbase.annotation.processor;
 
-import com.coinbase.model.annotation.Api;
+import com.coinbase.annotation.Api;
 import com.coinbase.util.Format;
 import com.google.auto.service.AutoService;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -19,21 +20,26 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Annotation processing to generate classes in same package:
  * https://stackoverflow.com/questions/19512334/java-annotation-processing-create-a-source-file-in-the-same-package-as-the-anno
  */
+@Slf4j
 @AutoService(Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_16)
-@SupportedAnnotationTypes({"com.coinbase.model.annotation.*"})
+@SupportedAnnotationTypes({"com.coinbase.annotation.*"})
 public class ApiProcessor extends AbstractProcessor {
 
     private Types typeUtils;
     private Elements elementUtils;
     private Filer filer;
     private Messager messager;
+
+    private List<ApiAnnotatedClass> apiImplementations;
 
     @Override
     public synchronized void init(final ProcessingEnvironment processingEnv){
@@ -43,6 +49,8 @@ public class ApiProcessor extends AbstractProcessor {
         elementUtils = processingEnv.getElementUtils();
         filer = processingEnv.getFiler();
         messager = processingEnv.getMessager();
+
+        apiImplementations = new LinkedList<>();
     }
 
     @Override
@@ -54,6 +62,9 @@ public class ApiProcessor extends AbstractProcessor {
             // process annotated API class, only applies to class implementations
             if (apiElement.getKind() == ElementKind.CLASS) {
                 final ApiAnnotatedClass apiAnnotatedClass = new ApiAnnotatedClass((TypeElement) apiElement);
+                apiImplementations.add(apiAnnotatedClass);
+                log.info("Processing annotation: {}", apiAnnotatedClass.toString());
+
             }
         }
         return false;

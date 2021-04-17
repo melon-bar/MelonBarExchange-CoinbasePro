@@ -1,4 +1,4 @@
-package com.coinbase.client.http.handler;
+package com.coinbase.http.handler;
 
 import com.coinbase.model.Response;
 
