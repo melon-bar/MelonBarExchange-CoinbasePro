@@ -46,7 +46,7 @@ public final class CoinbaseProAuthentication implements Authentication {
      *
      * @param httpRequestBuilder {@link HttpRequest.Builder}
      * @param method HTTP request method, e.g. <code>POST</code>
-     * @param uriPath Request URI
+     * @param uri Request URI
      * @param body Nullable message body, automatically converted to empty string for HTTP <code>GET</code>
      *             or null body input.
      * @return
@@ -56,7 +56,7 @@ public final class CoinbaseProAuthentication implements Authentication {
     @Override
     public HttpRequest.Builder sign(@NonNull final HttpRequest.Builder httpRequestBuilder,
                                     @NonNull final String method,
-                                    @NonNull final String uriPath,
+                                    @NonNull final String uri,
                                     final String body) {
         final String timestamp = Long.toString(DateTime.now().getMillis());
         try {
@@ -66,19 +66,19 @@ public final class CoinbaseProAuthentication implements Authentication {
                     .setHeader(CB_ACCESS_PASSPHRASE, apiPassword)
                     .setHeader(CB_ACCESS_TIMESTAMP, timestamp)
                     .setHeader(CB_ACCESS_SIGN,
-                            sign(timestamp, method, uriPath,
+                            sign(timestamp, method, uri,
                                     // empty string body for GET or null input
                                     Http.GET.name().equalsIgnoreCase(method) || body == null ? "" : body));
         } catch (NoSuchAlgorithmException | InvalidKeyException exceptionOnSign) {
             // signing issue
             throw new RuntimeException(
-                    "Exception thrown while signing HTTP request, " + requestDetails(method, uriPath, body),
+                    "Exception thrown while signing HTTP request, " + requestDetails(method, uri, body),
                     exceptionOnSign);
         } catch (Exception exception) {
             // other issue
             throw new RuntimeException(
                     "Unexpected runtime exception during creation of HTTP request, "
-                            + requestDetails(method, uriPath, body),
+                            + requestDetails(method, uri, body),
                     exception);
         }
     }
