@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
  * the expected argument count. Currently there is only support for static argument counts (no optional args).
  */
 public enum Resource {
+
     /**
      * Accounts API resources.
      */
@@ -126,7 +127,7 @@ public enum Resource {
      * @param j Ending of range
      * @return {@link Range} of <code>i</code> and <code>j</code>
      */
-    private static Range<Integer> range(int i, int j) {
+    private static Range<Integer> range(final int i, final int j) {
         return Range.between(i, j);
     }
 
@@ -136,7 +137,7 @@ public enum Resource {
      * @param i Beginning and end of range
      * @return {@link Range} of just <code>i</code>
      */
-    private static Range<Integer> expects(int i) {
+    private static Range<Integer> expects(final int i) {
         return Range.is(i);
     }
 }

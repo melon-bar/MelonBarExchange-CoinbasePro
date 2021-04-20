@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class ResponseHandler implements HttpResponse.BodyHandler<Response> {
 
-
     /**
      * Applies basic mapping to {@link Response} using the result {@link HttpResponse.ResponseInfo}. Stores the
      * string body content, the response header, and the response status code.

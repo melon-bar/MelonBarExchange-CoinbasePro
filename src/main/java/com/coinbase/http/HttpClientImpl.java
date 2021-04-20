@@ -4,7 +4,7 @@ import com.coinbase.authentication.Authentication;
 import com.coinbase.http.handler.ResponseHandler;
 import com.coinbase.model.Response;
 import com.coinbase.model.request.BaseRequest;
-import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.core.UriBuilder;
@@ -20,7 +20,6 @@ import java.net.http.HttpResponse;
  * {@link Authentication} to be provided.
  */
 @Slf4j
-@RequiredArgsConstructor
 public record HttpClientImpl(Authentication authentication,
                              java.net.http.HttpClient httpClient) implements HttpClient {
 
@@ -70,9 +69,9 @@ public record HttpClientImpl(Authentication authentication,
      */
     private HttpRequest.Builder applyMethod(final HttpRequest.Builder builder, final Http method) {
         return switch (method) {
-            case GET -> builder.GET();
+            case GET    -> builder.GET();
             case DELETE -> builder.DELETE();
-            default -> builder.method(method.name(), HttpRequest.BodyPublishers.noBody());
+            default     -> builder.method(method.name(), HttpRequest.BodyPublishers.noBody());
         };
     }
 }

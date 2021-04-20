@@ -16,6 +16,20 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnrichRequest {
+
+    /**
+     * {@link Resource Resource authority} of the annotated method. The {@link Resource} provides the URI format to
+     * be populated during request enrichment.
+     *
+     * @return {@link Resource The resource authority}
+     * @see com.coinbase.aspect.RequestEnrichmentAspect
+     */
     Resource authority();
+
+    /**
+     * HTTP method for the request.
+     *
+     * @return {@link Http HTTP method}
+     */
     Http type();
 }
