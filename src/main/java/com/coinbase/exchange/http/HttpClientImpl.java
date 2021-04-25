@@ -51,27 +51,17 @@ public record HttpClientImpl(Authentication authentication,
      * @return {@link HttpRequest} ready for dispatch
      */
     private HttpRequest generateHttpRequest(final BaseRequest request) {
-        final HttpRequest.Builder httpRequestContent = authentication.sign(
-                HttpRequest.newBuilder(),
-                request.getMethod().name(),
-                request.getUri(),
-                request.getBody()).uri(UriBuilder.fromUri(request.getUri()).build());
-        return applyMethod(httpRequestContent, request.getMethod()).build();
-    }
-
-    /**
-     * Dynamically applies the corresponding HTTP method to the {@link HttpRequest.Builder}, determined by the
-     * input {@link Http method enum}.
-     *
-     * @param builder Current HTTP request being built
-     * @param method HTTP method
-     * @return {@link HttpRequest.Builder} with HTTP method set
-     */
-    private HttpRequest.Builder applyMethod(final HttpRequest.Builder builder, final Http method) {
-        return switch (method) {
-            case GET    -> builder.GET();
-            case DELETE -> builder.DELETE();
-            default     -> builder.method(method.name(), HttpRequest.BodyPublishers.noBody());
-        };
+        return authentication.sign(
+                    HttpRequest.newBuilder(),
+                    request.getMethod().name(),
+                    request.getUri(),
+                    request.getBody())
+                // apply URI
+                .uri(UriBuilder.fromUri(request.getUri()).build())
+                // apply HTTP method and body
+                .method(
+                    request.getMethod().name(),
+                    HttpRequest.BodyPublishers.ofString(request.getBody()))
+                .build();
     }
 }

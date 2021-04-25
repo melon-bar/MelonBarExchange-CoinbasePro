@@ -8,7 +8,6 @@ import com.coinbase.exchange.model.Response;
 import com.coinbase.exchange.model.account.AccountsRequest;
 import lombok.RequiredArgsConstructor;
 
-// TODO: annotation processing for enriching data before http request
 @RequiredArgsConstructor
 public class AccountsApiImpl implements AccountsApi {
 

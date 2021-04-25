@@ -5,6 +5,7 @@ import com.coinbase.exchange.http.Http;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -38,5 +39,18 @@ public abstract class BaseRequest implements Request {
      */
     protected final <T> boolean ifPresent(final T field, final Predicate<T> constraint) {
         return field == null || constraint.test(field);
+    }
+
+    /**
+     * Enforces input fields to all be present, or all be absent (null).
+     *
+     * @param fields Fields
+     * @return True if fields are present, or if none are present
+     */
+    protected final boolean allOrNothing(final Object ... fields) {
+        return fields == null || fields.length < 1
+                // all fields must agree with the presence/absence of any other field
+                || Arrays.stream(fields)
+                    .allMatch(field -> field != null == (fields[0] != null));
     }
 }

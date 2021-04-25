@@ -12,20 +12,33 @@ import java.util.regex.Pattern;
 /**
  * Enum containing information on resource authority. Each {@link Resource} is defined by its resource URI format and
  * the expected argument count. Currently there is only support for static argument counts (no optional args).
+ *
+ * <p> TODO: Perform auto parsing on URI to determine expected args count range instead of relying on manual definition.
+ * <p> TODO: Make resources agnostic of the HTTP method, e.g. no need to have duplicate URIs for GET and DELETE methods.
  */
 public enum Resource {
 
     /**
      * Accounts API resources.
+     * @see <a href=https://docs.pro.coinbase.com/#accounts>https://docs.pro.coinbase.com/#accounts</a>
      */
     LIST_ACCOUNTS           ("/accounts",               expects(0)),
     GET_ACCOUNT             ("/accounts/{0}",           expects(1)),
     GET_ACCOUNT_HISTORY     ("/accounts/{0}/ledger",    expects(1)),
-    GET_HOLDS               ("/accounts/{0}/ledger",    expects(1));
+    GET_HOLDS               ("/accounts/{0}/ledger",    expects(1)),
 
     /**
-     * TODO API resources
+     * Orders API resources.
+     * @see <a href=https://docs.pro.coinbase.com/#orders>https://docs.pro.coinbase.com/#orders</a>
      */
+    PLACE_ORDER                 ("/orders",             expects(0)),
+    CANCEL_ORDER_BY_API_KEY     ("/orders/{0}",         expects(1)),
+    CANCEL_ORDER_BY_ORDER_ID    ("/orders/client::{0}", expects(1)),
+    CANCEL_ALL_ORDERS           ("/orders",             expects(0)),
+    LIST_ORDERS                 ("/orders",             expects(0)),
+    GET_ORDER_BY_API_KEY        ("/orders/{0}",         expects(1)),
+    GET_ORDER_BY_ORDER_ID       ("/orders/client::{0}", expects(1));
+
 
     // resource URI format
     @Getter private final String uri;

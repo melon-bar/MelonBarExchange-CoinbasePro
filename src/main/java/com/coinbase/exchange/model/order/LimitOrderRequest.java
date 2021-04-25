@@ -1,6 +1,6 @@
-package com.coinbase.exchange.model.order.request;
+package com.coinbase.exchange.model.order;
 
-import com.coinbase.exchange.annotation.Required;
+import com.coinbase.exchange.annotation.BodyField;
 import com.coinbase.exchange.model.order.flag.TimeInForce;
 
 import lombok.Builder;
@@ -12,15 +12,20 @@ import java.math.BigDecimal;
 @Builder
 public class LimitOrderRequest extends BaseNewOrderRequest {
 
-    @Required
+    @BodyField(key = "price", required = true)
     private final BigDecimal cryptoPrice;
 
-    @Required
+    @BodyField(key = "size", required = true)
     private final BigDecimal orderSize;
 
-    private TimeInForce timeInForce;
-    private DateTime cancelAfter;
-    private Boolean postOnly;
+    @BodyField(key = "time_in_force")
+    private final TimeInForce timeInForce;
+
+    @BodyField(key = "cancel_after")
+    private final DateTime cancelAfter;
+
+    @BodyField(key = "post_only")
+    private final Boolean postOnly;
 
     /**
      * Validates that when these fields are present:

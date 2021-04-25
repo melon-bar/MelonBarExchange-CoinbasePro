@@ -7,6 +7,9 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface Required {
+public @interface BodyField {
 
+    String key();
+
+    boolean required() default false;
 }
