@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
 /**
  * Marks a member variable for any extension of {@link BaseRequest} as a URI parameter. During URI formatting,
  * automatically invokes the member's <code>toString</code> implementation.
+ *
+ * <p> It is important to note that the inheritance hierarchy is not traversed in search of this annotation. In
+ * other words, all request fields should be defined within a single implementation.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

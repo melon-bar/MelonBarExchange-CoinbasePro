@@ -1,13 +1,19 @@
 package com.coinbase.exchange.aspect;
 
+import com.coinbase.exchange.annotation.BodyField;
 import com.coinbase.exchange.annotation.EnrichRequest;
 import com.coinbase.exchange.annotation.RequestField;
 import com.coinbase.exchange.api.resource.Resource;
-import com.coinbase.exchange.model.request.BaseRequest;
 import com.coinbase.exchange.http.Http;
+import com.coinbase.exchange.model.request.BaseRequest;
 import com.coinbase.exchange.util.Format;
 import com.coinbase.exchange.util.Guard;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,7 +21,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * Aspect for request enrichment before Coinbase Pro API calls. Handles core responsibilities of populating URI format
@@ -36,6 +41,10 @@ public class RequestEnrichmentAspect {
      */
     private static final String REQUEST_POINT_CUT =
             "public * execute(com.coinbase.api.authenticated.*(BaseRequest+)) && @annotation(EnrichRequest)";
+
+    private static final String DE_DUPE_SUFFIX_FORMAT = "$DEDUPE_{}$";
+
+    private static final String DE_DUPE_SUFFIX_REGEX = "\\$DEDUPE_\\d\\$";
 
     /**
      * Internal static record that stores URI params as a pair of index and value. May be sorted by index.
@@ -120,12 +129,14 @@ public class RequestEnrichmentAspect {
         final Resource resource = enrichRequestAnnotation.authority();
         final Http method = enrichRequestAnnotation.type();
 
-        // set method and URI
+        // set method, uri, and body
         request.setMethod(method);
         try {
-            request.setUri(getUri(resource, request));
-        } catch (IllegalAccessException illegalAccessException) {
-            throw new RuntimeException("Failed to populate URI template", illegalAccessException);
+            request.setUri(generateUri(resource, request));
+            request.setBody(generateRequestBody(request));
+        } catch (IllegalAccessException | JsonProcessingException exception) {
+            log.error("Failed to complete request enrichment, current request state: {}", request);
+            throw new RuntimeException("Failed to populate URI and/or request body", exception);
         }
 
         log.info("For request of type [{}], evaluated method as [{}] and URI as [{}]", request.getClass().getSimpleName(),
@@ -140,9 +151,9 @@ public class RequestEnrichmentAspect {
      * @param request Request whose URI is being evaluated
      * @param <T> Extension of {@link BaseRequest}
      * @return Evaluated URI
-     * @throws IllegalAccessException
+     * @throws IllegalAccessException When access to an inaccessible field is attempted
      */
-    private <T extends BaseRequest> String getUri(final Resource resource, final T request) throws IllegalAccessException {
+    private <T extends BaseRequest> String generateUri(final Resource resource, final T request) throws IllegalAccessException {
         Guard.nonNull(resource, request);
 
         final Class<? extends BaseRequest> requestClass = request.getClass();
@@ -158,17 +169,16 @@ public class RequestEnrichmentAspect {
         int i = 0;
         for (final Field field : request.getClass().getDeclaredFields()) {
             field.setAccessible(true);
-
             final RequestField requestField = field.getAnnotation(RequestField.class);
-            final Optional<Object> value = Optional.ofNullable(field.get(request));
+            final Object value = field.get(request);
 
             // only handle members with @RequestField annotation, and skip non-present required values
-            if (requestField == null || (value.isEmpty() && requestField.required())) {
+            if (requestField == null || (value == null && requestField.required())) {
                 continue;
             }
 
             // append URI parameter, index stored for later sorting
-            uriParameters[i++] = new UriParameter(requestField.index(), field.get(request));
+            uriParameters[i++] = new UriParameter(requestField.index(), value);
         }
 
         // sort in ascending order by index and populate URI
@@ -176,5 +186,76 @@ public class RequestEnrichmentAspect {
         return resource.populateUri(Arrays.stream(uriParameters)
                 .map(UriParameter::value)
                 .toArray(Object[]::new));
+    }
+
+    /**
+     * Generate request body based on the request class definition. All requests are expected to be an extension of
+     * {@link BaseRequest}. All fields, including those inherited, annotated with {@link BodyField} will be processed
+     * into the request body.
+     *
+     * @param request Request that will be used to generate the request body
+     * @param <T> Extension of {@link BaseRequest}
+     * @return Jsonified request body as string
+     * @throws IllegalAccessException When access to an inaccessible field is attempted
+     * @throws JsonProcessingException If the {@link ObjectMapper} fails to produce a json format string
+     */
+    private <T extends BaseRequest> String generateRequestBody(final T request)
+            throws IllegalAccessException, JsonProcessingException {
+        Guard.nonNull(request);
+
+        // get all fields annotated with @BodyField, including those from inheritance hierarchy
+        final Field[] fields = Arrays.stream(FieldUtils.getAllFields(request.getClass()))
+                .filter(field -> field.getAnnotation(BodyField.class) != null)
+                .toArray(Field[]::new);
+        boolean deduped = false;
+
+        // no body fields, no more work needed
+        if (fields.length == 0) {
+            return "";
+        }
+
+        final ObjectMapper mapper = new ObjectMapper();
+        final ObjectNode root = mapper.createObjectNode();
+
+        // process each field
+        for (final Field field : fields) {
+            field.setAccessible(true);
+            final BodyField bodyField = field.getAnnotation(BodyField.class);
+            final Object value = field.get(request);
+            if (value.getClass().isArray()) {
+                /*
+                 * Jackson databind does not support duplicate keys in json format, so we must apply temporary
+                 * suffix that is known for later de-dupe.
+                 */
+                final Object[] values = (Object[]) value;
+                int i = 0;
+                for (final Object _value : values) {
+                    root.put(bodyField.key() + Format.format(DE_DUPE_SUFFIX_FORMAT, i++), _value.toString());
+                }
+                deduped = true;
+            } else {
+                // add to object mapper
+                root.put(bodyField.key(), value.toString());
+            }
+        }
+
+        // convert request body to string format with deduped keys (if necessary)
+        final String requestBody = mapper.writeValueAsString(root).trim();
+        final String dedupedRequestBody = deduped ? dedupeKeys(requestBody) : requestBody;
+        log.info("Generated body for request type {} (deduped = {}): [{}]", request.getClass().getSimpleName(),
+                deduped, dedupedRequestBody);
+
+        return dedupedRequestBody;
+    }
+
+    /**
+     * Helper for replacing all deduped keys for a given input string, assuming it is in json format. Effectively
+     * no-op if the input is null or empty, or if no keys need to be deduped.
+     *
+     * @param jsonString Json format string
+     * @return Json format string with deduped keys
+     */
+    private String dedupeKeys(final String jsonString) {
+        return StringUtils.isEmpty(jsonString) ? "" : jsonString.replaceAll(DE_DUPE_SUFFIX_REGEX, "");
     }
 }
