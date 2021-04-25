@@ -21,6 +21,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Aspect for request enrichment before Coinbase Pro API calls. Handles core responsibilities of populating URI format
@@ -207,7 +208,6 @@ public class RequestEnrichmentAspect {
         final Field[] fields = Arrays.stream(FieldUtils.getAllFields(request.getClass()))
                 .filter(field -> field.getAnnotation(BodyField.class) != null)
                 .toArray(Field[]::new);
-        boolean deduped = false;
 
         // no body fields, no more work needed
         if (fields.length == 0) {
@@ -221,31 +221,41 @@ public class RequestEnrichmentAspect {
         for (final Field field : fields) {
             field.setAccessible(true);
             final BodyField bodyField = field.getAnnotation(BodyField.class);
-            final Object value = field.get(request);
-            if (value.getClass().isArray()) {
-                /*
-                 * Jackson databind does not support duplicate keys in json format, so we must apply temporary
-                 * suffix that is known for later de-dupe.
-                 */
-                final Object[] values = (Object[]) value;
-                int i = 0;
-                for (final Object _value : values) {
-                    root.put(bodyField.key() + Format.format(DE_DUPE_SUFFIX_FORMAT, i++), _value.toString());
-                }
-                deduped = true;
-            } else {
-                // add to object mapper
-                root.put(bodyField.key(), value.toString());
-            }
+            final Optional<Object> maybeValue = Optional.ofNullable(field.get(request));
+            maybeValue.ifPresentOrElse(
+                    // body field value present, process
+                    value -> {
+                        if (value.getClass().isArray()) {
+                            /*
+                             * Jackson databind does not support duplicate keys in json format, so we must apply temporary
+                             * suffix that is known for later de-dupe.
+                             */
+                            final Object[] values = (Object[]) value;
+                            int i = 0;
+                            for (final Object _value : values) {
+                                root.put(bodyField.key() + Format.format(DE_DUPE_SUFFIX_FORMAT, i++),
+                                        _value.toString());
+                            }
+                        } else {
+                            // add to object mapper
+                            root.put(bodyField.key(), value.toString());
+                        }
+                    },
+                    // body field value not present, throw exception if marked as required
+                    () -> {
+                        if (bodyField.required()) {
+                            throw new RuntimeException(Format.format("Required field {} (key={}) for request {} is null!",
+                                    field.getName(), bodyField.key(), request.getClass().getSimpleName()));
+                        }
+                    }
+            );
         }
 
         // convert request body to string format with deduped keys (if necessary)
-        final String requestBody = mapper.writeValueAsString(root).trim();
-        final String dedupedRequestBody = deduped ? dedupeKeys(requestBody) : requestBody;
-        log.info("Generated body for request type {} (deduped = {}): [{}]", request.getClass().getSimpleName(),
-                deduped, dedupedRequestBody);
+        final String requestBody = dedupeKeys(mapper.writeValueAsString(root).trim());
+        log.info("Generated body for request type {}: [{}]", request.getClass().getSimpleName(), requestBody);
 
-        return dedupedRequestBody;
+        return requestBody;
     }
 
     /**
