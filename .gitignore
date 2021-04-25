@@ -5,6 +5,9 @@
 *.iml
 *.ipr
 
+# Maven
+target/
+
 # CMake
 cmake-build-*/
 
