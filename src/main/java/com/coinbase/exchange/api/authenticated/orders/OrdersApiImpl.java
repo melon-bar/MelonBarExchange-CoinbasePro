@@ -51,16 +51,19 @@ public class OrdersApiImpl implements OrdersApi {
     }
 
     @Override
+    @EnrichRequest(authority = Resource.LIST_ORDERS, type = Http.GET)
     public Response listOrders(final ListOrdersRequest listOrdersRequest) {
         return httpClient.send(listOrdersRequest).body();
     }
 
     @Override
+    @EnrichRequest(authority = Resource.GET_ORDER_BY_API_KEY, type = Http.GET)
     public Response getOrderByApiKey(final GetOrderByApiKeyRequest getOrderByApiKeyRequest) {
         return httpClient.send(getOrderByApiKeyRequest).body();
     }
 
     @Override
+    @EnrichRequest(authority = Resource.GET_ORDER_BY_ORDER_ID, type = Http.GET)
     public Response getOrderByOrderId(final GetOrderByOrderIdRequest getOrderByOrderIdRequest) {
         return httpClient.send(getOrderByOrderIdRequest).body();
     }
