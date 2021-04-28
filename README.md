@@ -3,6 +3,7 @@
 * TESTING
 * Implement the rest of the APIs
 * More javadoc
+* De-lombok, too hacky
 
 ---------------------------------
 ## Current structure:
