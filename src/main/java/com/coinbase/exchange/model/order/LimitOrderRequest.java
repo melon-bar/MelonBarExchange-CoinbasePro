@@ -2,9 +2,7 @@ package com.coinbase.exchange.model.order;
 
 import com.coinbase.exchange.annotation.BodyField;
 import com.coinbase.exchange.model.order.flag.TimeInForce;
-
 import lombok.Builder;
-
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;

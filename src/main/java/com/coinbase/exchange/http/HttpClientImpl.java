@@ -4,7 +4,6 @@ import com.coinbase.exchange.authentication.Authentication;
 import com.coinbase.exchange.http.handler.ResponseHandler;
 import com.coinbase.exchange.model.Response;
 import com.coinbase.exchange.model.request.BaseRequest;
-
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.core.UriBuilder;

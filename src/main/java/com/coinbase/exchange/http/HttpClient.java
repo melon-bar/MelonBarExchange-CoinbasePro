@@ -12,7 +12,7 @@ public interface HttpClient {
 
     /**
      * Accepts {@link BaseRequest} and performs some HTTP request, whose result is returned as
-     * {@link HttpResponse< Response >}.
+     * {@link HttpResponse<Response>}.
      *
      * @param request Request
      * @return {@link HttpResponse<Response>}
