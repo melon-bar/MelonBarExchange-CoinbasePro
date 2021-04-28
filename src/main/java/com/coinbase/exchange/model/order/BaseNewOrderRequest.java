@@ -1,40 +1,42 @@
 package com.coinbase.exchange.model.order;
 
 import com.coinbase.exchange.annotation.BodyField;
-import com.coinbase.exchange.model.request.BaseRequest;
 import com.coinbase.exchange.model.Product;
 import com.coinbase.exchange.model.order.flag.OrderSide;
 import com.coinbase.exchange.model.order.flag.OrderStop;
 import com.coinbase.exchange.model.order.flag.OrderType;
 import com.coinbase.exchange.model.order.flag.SelfTradePrevention;
-import lombok.Builder;
+import com.coinbase.exchange.model.request.BaseRequest;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Builder
+@Getter
+@Setter
 public abstract class BaseNewOrderRequest extends BaseRequest {
 
     @BodyField(key = "side", required = true)
-    private final OrderSide orderSide;
+    private OrderSide orderSide;
 
     @BodyField(key = "product_id", required = true)
-    private final Product product;
+    private Product product;
 
     @BodyField(key = "client_oid")
-    private final UUID clientOrderId;
+    private UUID clientOrderId;
 
     @BodyField(key = "type")
-    private final OrderType orderType;
+    private OrderType orderType;
 
     @BodyField(key = "stop")
-    private final OrderStop orderStop;
+    private OrderStop orderStop;
 
     @BodyField(key = "stop_price")
-    private final BigDecimal stopPrice;
+    private BigDecimal stopPrice;
 
     @BodyField(key = "stp")
-    private final SelfTradePrevention selfTradePrevention;
+    private SelfTradePrevention selfTradePrevention;
 
     protected boolean validateBaseRequest() {
         return allOrNothing(stopPrice, orderStop);
