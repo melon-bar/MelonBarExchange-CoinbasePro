@@ -21,18 +21,18 @@ public enum Resource {
      * Accounts API resources.
      * @see <a href=https://docs.pro.coinbase.com/#accounts>https://docs.pro.coinbase.com/#accounts</a>
      */
-    ACCOUNT             ("/accounts",            expects(0)),
-    ACCOUNT_BY_ID       ("/accounts/{0}",        expects(1)),
-    ACCOUNT_LEDGER      ("/accounts/{0}/ledger", expects(1)),
-    ACCOUNT_HOLDS       ("/accounts/{0}/holds",  expects(1)),
+    ACCOUNT             ("/accounts",           expects(0)),
+    ACCOUNT_BY_ID       ("/accounts/{}",        expects(1)),
+    ACCOUNT_LEDGER      ("/accounts/{}/ledger", expects(1)),
+    ACCOUNT_HOLDS       ("/accounts/{}/holds",  expects(1)),
 
     /**
      * Orders API resources.
      * @see <a href=https://docs.pro.coinbase.com/#orders>https://docs.pro.coinbase.com/#orders</a>
      */
-    ORDER               ("/orders",              expects(0)),
-    ORDER_BY_API_KEY    ("/orders/{0}",          expects(1)),
-    ORDER_BY_ORDER_ID   ("/orders/client::{0}",  expects(1));
+    ORDER               ("/orders",             expects(0)),
+    ORDER_BY_API_KEY    ("/orders/{}",          expects(1)),
+    ORDER_BY_ORDER_ID   ("/orders/client::{}",  expects(1));
 
     // resource URI format
     @Getter private final String uri;
@@ -100,7 +100,7 @@ public enum Resource {
      * Validation check on format URI and expected args range. Ensures the correct number of delimiters are present
      * and that every open bracket has a matching closing bracket.
      *
-     * <p> Current only accepts delimiters: <code>{}</code> and <code>{x}</code>, where <code>x</code> is an integer.
+     * <p> Current only accepts delimiters: <code>{}</code>.
      */
     private void validate() {
         final int openBracketCount = StringUtils.countMatches(uri, "{");
@@ -114,7 +114,7 @@ public enum Resource {
         }
 
         // validate delimiter formatting
-        final Matcher delimiterFormat = Pattern.compile("\\{\\d+}").matcher(uri);
+        final Matcher delimiterFormat = Pattern.compile("\\{}").matcher(uri);
         if (delimiterFormat.results().count() != openBracketCount) {
             throw new IllegalStateException(Format.format(
                     "Invalid bracket arrangement for URI [{}].", uri));
