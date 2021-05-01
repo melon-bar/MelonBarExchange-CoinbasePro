@@ -28,6 +28,11 @@ import java.util.Optional;
 public class RequestEnricher implements Enricher {
 
     /**
+     * Coinbase Pro URL.
+     */
+    private static final String COINBASE_PRO_ENDPOINT = "https://api.pro.coinbase.com";
+
+    /**
      * Suffix for deduping JSON keys.
      */
     private static final String DE_DUPE_SUFFIX_FORMAT = "$DEDUPE_{}$";
@@ -61,7 +66,8 @@ public class RequestEnricher implements Enricher {
     public <T extends BaseRequest> T enrichRequest(final T request, final Http method, final Resource resource) {
         request.setMethod(method);
         try {
-            request.setUri(generateUri(resource, request));
+            request.setRequestPath(generateUri(resource, request));
+            request.setUri(COINBASE_PRO_ENDPOINT + request.getRequestPath());
             request.setBody(generateRequestBody(request));
         } catch (IllegalAccessException | JsonProcessingException exception) {
             log.error("Failed to complete request enrichment, current request state: {}", request);
@@ -88,7 +94,8 @@ public class RequestEnricher implements Enricher {
 
         final Class<? extends BaseRequest> requestClass = request.getClass();
         final String uriFormat = resource.getUri();
-        final UriParameter[] uriParameters = new UriParameter[requestClass.getAnnotationsByType(RequestField.class).length];
+        final UriParameter[] uriParameters = new UriParameter[
+                FieldUtils.getFieldsListWithAnnotation(requestClass, RequestField.class).size()];
 
         // URI with no params
         if (resource.getMaxArgs() < 1) {

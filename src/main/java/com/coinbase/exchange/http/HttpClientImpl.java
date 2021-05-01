@@ -4,9 +4,11 @@ import com.coinbase.exchange.authentication.Authentication;
 import com.coinbase.exchange.http.handler.ResponseHandler;
 import com.coinbase.exchange.model.Response;
 import com.coinbase.exchange.model.request.BaseRequest;
+import com.coinbase.exchange.util.Format;
+import com.coinbase.exchange.util.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
@@ -36,8 +38,9 @@ public record HttpClientImpl(Authentication authentication,
     public HttpResponse<Response> send(final BaseRequest request) {
         try {
             return httpClient.send(generateHttpRequest(request), new ResponseHandler());
-        } catch (Exception __) {
-            // TODO
+        } catch (Exception exception) {
+            log.error(Format.format("Something went wrong while dispatching request: [{}]",
+                    RequestUtils.toString(request)), exception);
         }
         return null;
     }
@@ -53,10 +56,10 @@ public record HttpClientImpl(Authentication authentication,
         return authentication.sign(
                     HttpRequest.newBuilder(),
                     request.getMethod().name(),
-                    request.getUri(),
+                    request.getRequestPath(),
                     request.getBody())
                 // apply URI
-                .uri(UriBuilder.fromUri(request.getUri()).build())
+                .uri(URI.create(request.getUri()))
                 // apply HTTP method and body
                 .method(
                     request.getMethod().name(),

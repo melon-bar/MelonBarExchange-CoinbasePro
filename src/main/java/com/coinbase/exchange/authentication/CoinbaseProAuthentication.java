@@ -4,6 +4,7 @@ import com.coinbase.exchange.http.Http;
 import com.coinbase.exchange.util.Format;
 
 import com.coinbase.exchange.util.Guard;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
 import javax.crypto.Mac;
@@ -17,6 +18,7 @@ import java.util.Base64;
 /**
  * Authentication source for making <code>Trade</code> level permission requests to Coinbase Pro.
  */
+@Slf4j
 public record CoinbaseProAuthentication(String apiKey, String apiPassword,
                                         String apiSecretKey) implements Authentication {
 
@@ -55,7 +57,7 @@ public record CoinbaseProAuthentication(String apiKey, String apiPassword,
         // only body is nullable
         Guard.nonNull(httpRequestBuilder, method, uri);
 
-        final String timestamp = Long.toString(DateTime.now().getMillis());
+        final String timestamp = Long.toString(DateTime.now().getMillis() / 1000);
         try {
             return httpRequestBuilder
                     .setHeader(CONTENT_TYPE, APPLICATION_JSON_TYPE)
@@ -103,16 +105,12 @@ public record CoinbaseProAuthentication(String apiKey, String apiPassword,
                         final String body) throws NoSuchAlgorithmException, InvalidKeyException {
         final byte[] decodedSecretKey = Base64.getDecoder().decode(apiSecretKey);
         final Mac hmac = Mac.getInstance(HMAC_SHA256);
-        final SecretKeySpec secretKeySpec = new SecretKeySpec(decodedSecretKey, HMAC_SHA256);
+        final SecretKeySpec secretKeySpec = new SecretKeySpec(decodedSecretKey, hmac.getAlgorithm());
 
-        /*
-         * Init with secret key spec, made from base64 decoded secret key using sha256 HMAC.
-         * Resultant value is trimmed in case of any unexpected trailing whitespace chars,
-         * including newlines.
-         */
+        // init with secret key spec, made from base64 decoded secret key using sha256 HMAC.
         hmac.init(secretKeySpec);
         return Base64.getEncoder().encodeToString(
-                (timestamp + method + uriPath + body).getBytes(StandardCharsets.UTF_8)).trim();
+                hmac.doFinal((timestamp + method + uriPath + body).getBytes(StandardCharsets.UTF_8)));
     }
 
     private String requestDetails(final String method, final String uriPath, final String body) {

@@ -14,6 +14,7 @@ import java.util.function.Predicate;
  */
 public abstract class BaseRequest implements Request {
 
+    @Getter @Setter private String requestPath;
     @Getter @Setter private String uri;
     @Getter @Setter private String body;
     @Getter @Setter private Http method;

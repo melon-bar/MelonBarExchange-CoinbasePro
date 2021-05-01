@@ -34,7 +34,6 @@ public enum Resource {
     ORDER_BY_API_KEY    ("/orders/{0}",          expects(1)),
     ORDER_BY_ORDER_ID   ("/orders/client::{0}",  expects(1));
 
-
     // resource URI format
     @Getter private final String uri;
 
