@@ -64,8 +64,7 @@ public class RequestEnrichmentAspect {
      * @throws Throwable From {@link ProceedingJoinPoint}
      */
     @Around(REQUEST_POINT_CUT)
-    @SuppressWarnings("unchecked")
-    public <T extends BaseRequest> Object enrich(final ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object enrich(final ProceedingJoinPoint joinPoint) throws Throwable {
         final Object[] args = joinPoint.getArgs();
         final MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         final EnrichRequest enrichRequestAnnotation = methodSignature.getMethod().getAnnotation(EnrichRequest.class);
@@ -76,10 +75,8 @@ public class RequestEnrichmentAspect {
         /*
          * Get request resource authority and HTTP method, and populate URI based on the implementation of
          * the BaseRequest.
-         *
-         * TODO: Is below casting even possible? Might need to pass class into annotation.
          */
-        final T request = (T) args[0];
+        final BaseRequest request = (BaseRequest) args[0];
         enricher.enrichRequest(request, enrichRequestAnnotation.type(), enrichRequestAnnotation.authority());
 
         // validate request and proceed
