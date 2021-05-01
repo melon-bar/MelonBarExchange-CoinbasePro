@@ -14,25 +14,25 @@ public class AccountsApiImpl implements AccountsApi {
     private final HttpClient httpClient;
 
     @Override
-    @EnrichRequest(authority = Resource.LIST_ACCOUNTS, type = Http.GET)
+    @EnrichRequest(authority = Resource.ACCOUNT, type = Http.GET)
     public Response listAccounts(final AccountsRequest accountsRequest) {
         return httpClient.send(accountsRequest).body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.GET_ACCOUNT, type = Http.GET)
+    @EnrichRequest(authority = Resource.ACCOUNT_BY_ID, type = Http.GET)
     public Response getAccount(final AccountsRequest accountsRequest) {
         return httpClient.send(accountsRequest).body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.GET_ACCOUNT_HISTORY, type = Http.GET)
+    @EnrichRequest(authority = Resource.ACCOUNT_LEDGER, type = Http.GET)
     public Response getAccountHistory(final AccountsRequest accountsRequest) {
         return httpClient.send(accountsRequest).body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.GET_HOLDS, type = Http.GET)
+    @EnrichRequest(authority = Resource.ACCOUNT_HOLDS, type = Http.GET)
     public Response getHolds(final AccountsRequest accountsRequest) {
         return httpClient.send(accountsRequest).body();
     }

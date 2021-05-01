@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
  * the expected argument count. Currently there is only support for static argument counts (no optional args).
  *
  * <p> TODO: Perform auto parsing on URI to determine expected args count range instead of relying on manual definition.
- * <p> TODO: Make resources agnostic of the HTTP method, e.g. no need to have duplicate URIs for GET and DELETE methods.
  */
 public enum Resource {
 
@@ -22,22 +21,18 @@ public enum Resource {
      * Accounts API resources.
      * @see <a href=https://docs.pro.coinbase.com/#accounts>https://docs.pro.coinbase.com/#accounts</a>
      */
-    LIST_ACCOUNTS           ("/accounts",               expects(0)),
-    GET_ACCOUNT             ("/accounts/{0}",           expects(1)),
-    GET_ACCOUNT_HISTORY     ("/accounts/{0}/ledger",    expects(1)),
-    GET_HOLDS               ("/accounts/{0}/ledger",    expects(1)),
+    ACCOUNT             ("/accounts",            expects(0)),
+    ACCOUNT_BY_ID       ("/accounts/{0}",        expects(1)),
+    ACCOUNT_LEDGER      ("/accounts/{0}/ledger", expects(1)),
+    ACCOUNT_HOLDS       ("/accounts/{0}/holds",  expects(1)),
 
     /**
      * Orders API resources.
      * @see <a href=https://docs.pro.coinbase.com/#orders>https://docs.pro.coinbase.com/#orders</a>
      */
-    PLACE_ORDER                 ("/orders",             expects(0)),
-    CANCEL_ORDER_BY_API_KEY     ("/orders/{0}",         expects(1)),
-    CANCEL_ORDER_BY_ORDER_ID    ("/orders/client::{0}", expects(1)),
-    CANCEL_ALL_ORDERS           ("/orders",             expects(0)),
-    LIST_ORDERS                 ("/orders",             expects(0)),
-    GET_ORDER_BY_API_KEY        ("/orders/{0}",         expects(1)),
-    GET_ORDER_BY_ORDER_ID       ("/orders/client::{0}", expects(1));
+    ORDER               ("/orders",              expects(0)),
+    ORDER_BY_API_KEY    ("/orders/{0}",          expects(1)),
+    ORDER_BY_ORDER_ID   ("/orders/client::{0}",  expects(1));
 
 
     // resource URI format
@@ -109,8 +104,8 @@ public enum Resource {
      * <p> Current only accepts delimiters: <code>{}</code> and <code>{x}</code>, where <code>x</code> is an integer.
      */
     private void validate() {
-        final int openBracketCount = StringUtils.countMatches("{", uri);
-        final int closingBracketCount = StringUtils.countMatches("}", uri);
+        final int openBracketCount = StringUtils.countMatches(uri, "{");
+        final int closingBracketCount = StringUtils.countMatches(uri, "}");
 
         // validate bracket counts
         if (openBracketCount != closingBracketCount) {
@@ -120,7 +115,7 @@ public enum Resource {
         }
 
         // validate delimiter formatting
-        final Matcher delimiterFormat = Pattern.compile("\\{\\d}").matcher(uri);
+        final Matcher delimiterFormat = Pattern.compile("\\{\\d+}").matcher(uri);
         if (delimiterFormat.results().count() != openBracketCount) {
             throw new IllegalStateException(Format.format(
                     "Invalid bracket arrangement for URI [{}].", uri));
