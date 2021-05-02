@@ -30,8 +30,10 @@ public final class PostProcessing {
      * Converts the response content into a {@link JsonNode} using <code>asJson()</code> first, then attempts
      * to extract the value as a string using parameter <code>key</code> as a key.
      *
-     * @param key
-     * @return
+     * <p> TODO: add support for depth > 1 json parsing with inputs like <code>getJsonValueAsString("key1.key2")</code>
+     *
+     * @param key Json key
+     * @return String value corresponding to json key
      */
     public static PostProcessor<String> getJsonValueAsString(final String key) {
         return response -> asJson()
@@ -44,6 +46,12 @@ public final class PostProcessing {
                 .apply(response);
     }
 
+    /**
+     * Marshals the input json string into a {@link JsonNode}. Performs "deep" json parsing.
+     *
+     * @param jsonString String in json format
+     * @return {@link JsonNode}
+     */
     private static JsonNode marshalJson(final String jsonString) {
         Guard.nonNull(jsonString);
         try {
