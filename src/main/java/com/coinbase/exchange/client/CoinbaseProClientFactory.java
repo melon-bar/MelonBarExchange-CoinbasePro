@@ -1,6 +1,7 @@
 package com.coinbase.exchange.client;
 
 import com.coinbase.exchange.api.authenticated.accounts.AccountsApiImpl;
+import com.coinbase.exchange.api.authenticated.oracle.OracleApiImpl;
 import com.coinbase.exchange.api.authenticated.orders.OrdersApiImpl;
 import com.coinbase.exchange.authentication.Authentication;
 import com.coinbase.exchange.authentication.CoinbaseProAuthentication;
@@ -32,6 +33,7 @@ public final class CoinbaseProClientFactory {
 
         return new CoinbaseProClientImpl(
                 new AccountsApiImpl(httpClient, requestEnricher),
-                new OrdersApiImpl(httpClient, requestEnricher));
+                new OrdersApiImpl(httpClient, requestEnricher),
+                new OracleApiImpl(httpClient, requestEnricher));
     }
 }
