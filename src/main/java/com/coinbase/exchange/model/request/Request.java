@@ -11,5 +11,5 @@ public interface Request {
      *
      * @return True if the request is valid, false otherwise
      */
-    boolean validateRequest();
+    boolean isValidRequest();
 }

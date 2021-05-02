@@ -28,7 +28,7 @@ public abstract class BaseRequest implements Request {
      * @return True if the request is valid, false otherwise
      */
     @Override
-    public boolean validateRequest() {
+    public boolean isValidRequest() {
         return true;
     }
 

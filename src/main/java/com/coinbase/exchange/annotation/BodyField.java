@@ -13,8 +13,7 @@ import java.lang.annotation.Target;
  * During request body generation, the member's <code>toString</code> implementation is invoked.
  *
  * <p> Unlike {@link RequestField}, during execution-level enrichment, the inheritance hierarchy is traversed in
- * search for all occurrences of this annotation. Take {@link com.coinbase.exchange.model.order.BaseNewOrderRequest}
- * as an example.
+ * search for all occurrences of this annotation.
  *
  * <p> Currently, nested keys are not supported, since Coinbase Pro API requests (so far) don't require any
  * nested json objects. This is subject to change.

@@ -15,7 +15,6 @@ import com.coinbase.exchange.model.order.ListOrdersRequest;
 import com.coinbase.exchange.model.order.MarketOrderRequest;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public record OrdersApiImpl(HttpClient httpClient, Enricher requestEnricher) implements OrdersApi {
 
     @Override

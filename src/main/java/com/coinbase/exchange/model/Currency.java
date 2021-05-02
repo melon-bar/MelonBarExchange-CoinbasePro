@@ -7,7 +7,7 @@ public class Currency {
 
     @Getter
     @RequiredArgsConstructor
-    enum Unit {
+    public enum Unit {
         BTC("Bitcoin"),
         ETH("Ethereum"),
         USD("US Dollar");

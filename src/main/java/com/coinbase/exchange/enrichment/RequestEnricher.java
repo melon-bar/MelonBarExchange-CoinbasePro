@@ -3,6 +3,7 @@ package com.coinbase.exchange.enrichment;
 import com.coinbase.exchange.annotation.BodyField;
 import com.coinbase.exchange.annotation.RequestField;
 import com.coinbase.exchange.api.resource.Resource;
+import com.coinbase.exchange.exception.InvalidRequestException;
 import com.coinbase.exchange.http.Http;
 import com.coinbase.exchange.model.request.BaseRequest;
 import com.coinbase.exchange.util.Format;
@@ -73,6 +74,7 @@ public class RequestEnricher implements Enricher {
             log.error("Failed to complete request enrichment, current request state: {}", request);
             throw new RuntimeException("Failed to populate URI and/or request body", exception);
         }
+        validateRequest(request);
         log.info("For request of type [{}], evaluated method as [{}] and URI as [{}]", request.getClass().getSimpleName(),
                 request.getMethod(), request.getUri());
         return request;
@@ -115,7 +117,7 @@ public class RequestEnricher implements Enricher {
             final Object value = field.get(request);
 
             // only handle members with @RequestField annotation, and skip non-present required values
-            if (requestField == null || (value == null && requestField.required())) {
+            if (requestField == null || (value == null && !requestField.required())) {
                 continue;
             }
 
@@ -197,6 +199,21 @@ public class RequestEnricher implements Enricher {
         log.info("Generated body for request type {}: [{}]", request.getClass().getSimpleName(), requestBody);
 
         return requestBody;
+    }
+
+    /**
+     * Validate that the request implementation meets its own constraints, which are defined at class-level.
+     *
+     * @param request Request
+     * @param <T> Extension of {@link BaseRequest}
+     * @throws InvalidRequestException if <code>T</code>'s implementation of <code>isValidRequest</code> returns false
+     */
+    private <T extends BaseRequest> void validateRequest(final T request) {
+        if (!request.isValidRequest()) {
+            throw new InvalidRequestException(Format.format(
+                    "Request of type [{}] failed validation check, body: [{}], uri: [{}]",
+                    request.getClass().getSimpleName(), request.getBody(), request.getUri()));
+        }
     }
 
     /**

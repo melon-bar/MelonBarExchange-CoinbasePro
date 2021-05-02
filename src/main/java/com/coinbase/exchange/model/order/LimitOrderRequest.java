@@ -1,20 +1,48 @@
 package com.coinbase.exchange.model.order;
 
 import com.coinbase.exchange.annotation.BodyField;
+import com.coinbase.exchange.model.Product;
+import com.coinbase.exchange.model.order.flag.OrderSide;
+import com.coinbase.exchange.model.order.flag.OrderStop;
+import com.coinbase.exchange.model.order.flag.OrderType;
+import com.coinbase.exchange.model.order.flag.SelfTradePrevention;
 import com.coinbase.exchange.model.order.flag.TimeInForce;
+import com.coinbase.exchange.model.request.BaseRequest;
 import lombok.Builder;
 import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Builder
-public class LimitOrderRequest extends BaseNewOrderRequest {
+public class LimitOrderRequest extends BaseRequest {
+
+    @BodyField(key = "side", required = true)
+    private final OrderSide orderSide;
+
+    @BodyField(key = "product_id", required = true)
+    private final Product product;
 
     @BodyField(key = "price", required = true)
     private final BigDecimal price;
 
     @BodyField(key = "size", required = true)
     private final BigDecimal orderSize;
+
+    @BodyField(key = "type", required = true)
+    private final OrderType orderType = OrderType.LIMIT;
+
+    @BodyField(key = "client_oid")
+    private final UUID orderId;
+
+    @BodyField(key = "stop")
+    private final OrderStop orderStop;
+
+    @BodyField(key = "stop_price")
+    private final BigDecimal stopPrice;
+
+    @BodyField(key = "stp")
+    private final SelfTradePrevention selfTradePrevention;
 
     @BodyField(key = "time_in_force")
     private final TimeInForce timeInForce;
@@ -35,8 +63,8 @@ public class LimitOrderRequest extends BaseNewOrderRequest {
      * @return True if base order constraints and limit order constraints are met, otherwise false.
      */
     @Override
-    public boolean validateRequest() {
-        return super.validateBaseRequest()
+    public boolean isValidRequest() {
+        return allOrNothing(stopPrice, orderStop)
                 && (ifPresent(timeInForce, TimeInForce.GTT::equals)
                     || ifPresent(postOnly, p -> !(TimeInForce.IOC == timeInForce || TimeInForce.FOK == timeInForce)));
     }

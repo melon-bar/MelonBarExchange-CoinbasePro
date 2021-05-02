@@ -77,10 +77,8 @@ public class RequestEnrichmentAspect {
          * the BaseRequest.
          */
         final BaseRequest request = (BaseRequest) args[0];
-        enricher.enrichRequest(request, enrichRequestAnnotation.type(), enrichRequestAnnotation.authority());
 
-        // validate request and proceed
-        request.validateRequest();
+        enricher.enrichRequest(request, enrichRequestAnnotation.type(), enrichRequestAnnotation.authority());
         args[0] = request;
 
         return joinPoint.proceed(args);
