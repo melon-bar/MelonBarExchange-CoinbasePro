@@ -6,6 +6,27 @@
 * De-lombok, too hacky
 
 ---------------------------------
+## Example usage:
+
+#### Market order:
+```java
+/**
+ * Market order to buy 0.01 ETH using USD.
+ */
+final MarketOrderRequest marketOrderRequest = MarketOrderRequest.builder()
+                .orderSide(OrderSide.BUY)
+                .product(new Product(Currency.Unit.ETH, Currency.Unit.USD))
+                .orderSize(new BigDecimal("0.01"))
+                .build();
+final Response response = coinbaseProClient.placeMarketOrder(marketOrderRequest);
+```
+
+#### Limit order:
+```java
+// TODO
+```
+
+---------------------------------
 ## Current structure:
 
 ### 1. API Contract _(Request Level)_ 
