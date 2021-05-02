@@ -4,6 +4,8 @@ import com.coinbase.exchange.annotation.BodyField;
 import com.coinbase.exchange.annotation.RequestField;
 import com.coinbase.exchange.model.request.BaseRequest;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 public class CancelOrderByApiKeyRequest extends BaseRequest {
@@ -12,5 +14,5 @@ public class CancelOrderByApiKeyRequest extends BaseRequest {
     private final String productId;
 
     @RequestField(index = 0)
-    private final String apiKey;
+    @Getter @Setter private String apiKey;
 }

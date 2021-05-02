@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class LimitOrderRequest extends BaseNewOrderRequest {
 
     @BodyField(key = "price", required = true)
-    private final BigDecimal cryptoPrice;
+    private final BigDecimal price;
 
     @BodyField(key = "size", required = true)
     private final BigDecimal orderSize;

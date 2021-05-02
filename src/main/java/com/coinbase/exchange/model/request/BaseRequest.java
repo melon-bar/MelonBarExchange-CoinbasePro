@@ -2,6 +2,7 @@ package com.coinbase.exchange.model.request;
 
 import com.coinbase.exchange.aspect.RequestEnrichmentAspect;
 import com.coinbase.exchange.http.Http;
+import com.coinbase.exchange.util.request.Pagination;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public abstract class BaseRequest implements Request {
     @Getter @Setter private String uri;
     @Getter @Setter private String body;
     @Getter @Setter private Http method;
+    @Getter @Setter private Pagination pagination;
 
     /**
      * Default request evaluation. It is up to extending classes to override this method to provide a more thorough

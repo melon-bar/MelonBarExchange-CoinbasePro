@@ -9,11 +9,11 @@ import java.net.http.HttpHeaders;
 
 @Getter
 @RequiredArgsConstructor
-public class Response {
+public record Response(String content, HttpHeaders headers, int statusCode) {
 
-    private final String content;
-    private final HttpHeaders headers;
-    private final int statusCode;
+    public static Response empty() {
+        return new Response("", null, -1);
+    }
 
     @Override
     public String toString() {

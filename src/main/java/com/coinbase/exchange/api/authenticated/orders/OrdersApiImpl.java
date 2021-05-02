@@ -1,7 +1,7 @@
 package com.coinbase.exchange.api.authenticated.orders;
 
-import com.coinbase.exchange.annotation.EnrichRequest;
 import com.coinbase.exchange.api.resource.Resource;
+import com.coinbase.exchange.enrichment.Enricher;
 import com.coinbase.exchange.http.Http;
 import com.coinbase.exchange.http.HttpClient;
 import com.coinbase.exchange.model.Response;
@@ -16,55 +16,69 @@ import com.coinbase.exchange.model.order.MarketOrderRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrdersApiImpl implements OrdersApi {
-
-    private final HttpClient httpClient;
+public record OrdersApiImpl(HttpClient httpClient, Enricher requestEnricher) implements OrdersApi {
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER, type = Http.POST)
     public Response placeLimitOrder(final LimitOrderRequest limitOrderRequest) {
-        return httpClient.send(limitOrderRequest).body();
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        limitOrderRequest, Http.POST, Resource.ORDER))
+                .body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER, type = Http.POST)
     public Response placeMarketOrder(final MarketOrderRequest marketOrderRequest) {
-        return httpClient.send(marketOrderRequest).body();
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        marketOrderRequest, Http.POST, Resource.ORDER))
+                .body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER_BY_API_KEY, type = Http.DELETE)
     public Response cancelOrderByApiKey(final CancelOrderByApiKeyRequest cancelOrderByApiKeyRequest) {
-        return httpClient.send(cancelOrderByApiKeyRequest).body();
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        cancelOrderByApiKeyRequest, Http.DELETE, Resource.ORDER_BY_API_KEY))
+                .body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER_BY_ORDER_ID, type = Http.DELETE)
-    public Response cancelOrderByClientOrderId(final CancelOrderByOrderIdRequest cancelOrderByOrderIdRequest) {
-        return httpClient.send(cancelOrderByOrderIdRequest).body();
+    public Response cancelOrderByOrderId(final CancelOrderByOrderIdRequest cancelOrderByOrderIdRequest) {
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        cancelOrderByOrderIdRequest, Http.DELETE, Resource.ORDER_BY_ORDER_ID))
+                .body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER, type = Http.DELETE)
     public Response cancelAllOrders(final CancelAllOrdersRequest cancelAllOrdersRequest) {
-        return httpClient.send(cancelAllOrdersRequest).body();
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        cancelAllOrdersRequest, Http.DELETE, Resource.ORDER))
+                .body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER, type = Http.GET)
     public Response listOrders(final ListOrdersRequest listOrdersRequest) {
-        return httpClient.send(listOrdersRequest).body();
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        listOrdersRequest, Http.GET, Resource.ORDER))
+                .body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER_BY_API_KEY, type = Http.GET)
     public Response getOrderByApiKey(final GetOrderByApiKeyRequest getOrderByApiKeyRequest) {
-        return httpClient.send(getOrderByApiKeyRequest).body();
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        getOrderByApiKeyRequest, Http.GET, Resource.ORDER_BY_API_KEY))
+                .body();
     }
 
     @Override
-    @EnrichRequest(authority = Resource.ORDER_BY_ORDER_ID, type = Http.GET)
     public Response getOrderByOrderId(final GetOrderByOrderIdRequest getOrderByOrderIdRequest) {
-        return httpClient.send(getOrderByOrderIdRequest).body();
+        return httpClient.send(
+                requestEnricher.enrichRequest(
+                        getOrderByOrderIdRequest, Http.GET, Resource.ORDER_BY_API_KEY))
+                .body();
     }
 }

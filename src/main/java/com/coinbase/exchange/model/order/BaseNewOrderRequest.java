@@ -24,7 +24,7 @@ public abstract class BaseNewOrderRequest extends BaseRequest {
     private Product product;
 
     @BodyField(key = "client_oid")
-    private UUID clientOrderId;
+    private UUID orderId;
 
     @BodyField(key = "type")
     private OrderType orderType;

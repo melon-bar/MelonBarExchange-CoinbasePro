@@ -12,5 +12,5 @@ public class CancelOrderByOrderIdRequest extends BaseRequest {
     private final String productId;
 
     @RequestField(index = 0)
-    private final String clientOrderId;
+    private final String orderId;
 }

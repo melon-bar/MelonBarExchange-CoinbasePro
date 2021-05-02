@@ -8,5 +8,5 @@ import lombok.Builder;
 public class GetOrderByOrderIdRequest extends BaseRequest {
 
     @RequestField(index = 0)
-    private final String clientOrderId;
+    private final String orderId;
 }

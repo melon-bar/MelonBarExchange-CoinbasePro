@@ -18,7 +18,7 @@ public interface OrdersApi {
 
     Response cancelOrderByApiKey(final CancelOrderByApiKeyRequest cancelOrderByApiKeyRequest);
 
-    Response cancelOrderByClientOrderId(final CancelOrderByOrderIdRequest cancelOrderByOrderIdRequest);
+    Response cancelOrderByOrderId(final CancelOrderByOrderIdRequest cancelOrderByOrderIdRequest);
 
     Response cancelAllOrders(final CancelAllOrdersRequest cancelAllOrdersRequest);
 

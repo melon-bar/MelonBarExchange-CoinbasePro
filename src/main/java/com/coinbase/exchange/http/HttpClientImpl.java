@@ -5,7 +5,7 @@ import com.coinbase.exchange.http.handler.ResponseHandler;
 import com.coinbase.exchange.model.Response;
 import com.coinbase.exchange.model.request.BaseRequest;
 import com.coinbase.exchange.util.Format;
-import com.coinbase.exchange.util.RequestUtils;
+import com.coinbase.exchange.util.request.Requests;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
@@ -19,15 +19,17 @@ import java.net.http.HttpResponse;
  *
  * <p> This implementation's intent is to make authenticated requests, requiring an implementation of
  * {@link Authentication} to be provided.
+ *
+ * <p> TODO: asynchronous request dispatch.
  */
 @Slf4j
 public record HttpClientImpl(Authentication authentication,
                              java.net.http.HttpClient httpClient) implements HttpClient {
 
     /**
-     * Dispatches an {@link HttpRequest} generated from {@link BaseRequest} using {@link java.net.http.HttpClient}.
-     * Handles response body using {@link ResponseHandler}. The response body, {@link Response}, contains the result
-     * headers, status code, and string content.
+     * Dispatches an {@link HttpRequest} <i>synchronously</i>, generated from {@link BaseRequest} using
+     * {@link java.net.http.HttpClient}. Handles response body using {@link ResponseHandler}. The response body,
+     * {@link Response}, contains the result headers, status code, and string content.
      *
      * <p> The caller of this dispatch has authority of any post-processing or object mapping on the result.
      *
@@ -37,10 +39,12 @@ public record HttpClientImpl(Authentication authentication,
     @Override
     public HttpResponse<Response> send(final BaseRequest request) {
         try {
+            log.trace("Dispatching request [{}] with method [{}] to URL: [{}]",
+                    request.getClass().getSimpleName(), request.getMethod(), request.getUri());
             return httpClient.send(generateHttpRequest(request), new ResponseHandler());
         } catch (Exception exception) {
             log.error(Format.format("Something went wrong while dispatching request: [{}]",
-                    RequestUtils.toString(request)), exception);
+                    Requests.toString(request)), exception);
         }
         return null;
     }

@@ -93,9 +93,14 @@ public class RequestEnricher implements Enricher {
         Guard.nonNull(resource, request);
 
         final Class<? extends BaseRequest> requestClass = request.getClass();
-        final String uriFormat = resource.getUri();
         final UriParameter[] uriParameters = new UriParameter[
                 FieldUtils.getFieldsListWithAnnotation(requestClass, RequestField.class).size()];
+        String uriFormat = resource.getUri();
+
+        // may be paginated
+        if (request.getPagination() != null) {
+            uriFormat += request.getPagination().toString();
+        }
 
         // URI with no params
         if (resource.getMaxArgs() < 1) {
