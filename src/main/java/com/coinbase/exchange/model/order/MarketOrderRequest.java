@@ -42,6 +42,13 @@ public class MarketOrderRequest extends BaseRequest {
     @BodyField(key = "funds")
     private final BigDecimal funds;
 
+    /**
+     * Is a valid request when:
+     * <p> 1. Either <code>stopPrice</code> or <code>orderPrice</code> is defined, but never both
+     * <p> 2. One of <code>size</code> or <code>funds</code> is defined
+     *
+     * @return True if market order constraints are met, otherwise false.
+     */
     @Override
     public boolean isValidRequest() {
         return allOrNothing(stopPrice, orderStop) && !(size != null && funds != null);

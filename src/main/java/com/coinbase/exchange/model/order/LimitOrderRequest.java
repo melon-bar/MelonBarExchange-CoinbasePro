@@ -55,12 +55,10 @@ public class LimitOrderRequest extends BaseRequest {
 
     /**
      * Validates that when these fields are present:
-     * <p>
-     * 1. <code>cancelAfter</code>: <code>timeInForce</code> is GTT
-     * <p>
-     * 2. <code>postOnly</code>: <code>timeInForce</code> is not IOC or FOK
+     * <p> 1. <code>cancelAfter</code>: <code>timeInForce</code> is GTT
+     * <p> 2. <code>postOnly</code>: <code>timeInForce</code> is not IOC or FOK
      *
-     * @return True if base order constraints and limit order constraints are met, otherwise false.
+     * @return True if limit order constraints are met, otherwise false.
      */
     @Override
     public boolean isValidRequest() {
