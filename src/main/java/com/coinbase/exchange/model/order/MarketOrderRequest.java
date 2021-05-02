@@ -25,7 +25,7 @@ public class MarketOrderRequest extends BaseRequest {
     private final OrderType orderType = OrderType.MARKET;
 
     @BodyField(key = "size")
-    private final BigDecimal orderSize;
+    private final BigDecimal size;
 
     @BodyField(key = "client_oid")
     private final UUID orderId;
@@ -44,6 +44,6 @@ public class MarketOrderRequest extends BaseRequest {
 
     @Override
     public boolean isValidRequest() {
-        return allOrNothing(stopPrice, orderStop) && !(orderSize != null && funds != null);
+        return allOrNothing(stopPrice, orderStop) && !(size != null && funds != null);
     }
 }

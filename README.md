@@ -16,7 +16,7 @@
 final MarketOrderRequest marketOrderRequest = MarketOrderRequest.builder()
                 .orderSide(OrderSide.BUY)
                 .product(new Product(Currency.Unit.ETH, Currency.Unit.USD))
-                .orderSize(new BigDecimal("0.01"))
+                .size(new BigDecimal("0.01"))
                 .build();
 final Response response = coinbaseProClient.placeMarketOrder(marketOrderRequest);
 ```
