@@ -1,8 +1,8 @@
 package com.coinbase.exchange.http;
 
 import com.coinbase.exchange.authentication.Authentication;
-import com.coinbase.exchange.http.handler.ResponseHandler;
-import com.coinbase.exchange.model.Response;
+import com.coinbase.exchange.http.handler.ResponseBodyHandler;
+import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.request.BaseRequest;
 import com.coinbase.exchange.util.Format;
 import com.coinbase.exchange.util.request.Requests;
@@ -28,7 +28,7 @@ public record HttpClientImpl(Authentication authentication,
 
     /**
      * Dispatches an {@link HttpRequest} <i>synchronously</i>, generated from {@link BaseRequest} using
-     * {@link java.net.http.HttpClient}. Handles response body using {@link ResponseHandler}. The response body,
+     * {@link java.net.http.HttpClient}. Handles response body using {@link ResponseBodyHandler}. The response body,
      * {@link Response}, contains the result headers, status code, and string content.
      *
      * <p> The caller of this dispatch has authority of any post-processing or object mapping on the result.
@@ -39,9 +39,9 @@ public record HttpClientImpl(Authentication authentication,
     @Override
     public HttpResponse<Response> send(final BaseRequest request) {
         try {
-            log.trace("Dispatching request [{}] with method [{}] to URL: [{}]",
+            log.info("Dispatching request [{}] with method [{}] to URL: [{}]",
                     request.getClass().getSimpleName(), request.getMethod(), request.getUri());
-            return httpClient.send(generateHttpRequest(request), new ResponseHandler());
+            return httpClient.send(generateHttpRequest(request), new ResponseBodyHandler());
         } catch (Exception exception) {
             log.error(Format.format("Something went wrong while dispatching request: [{}]",
                     Requests.toString(request)), exception);

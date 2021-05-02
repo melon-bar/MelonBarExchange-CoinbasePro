@@ -4,7 +4,7 @@ import com.coinbase.exchange.api.resource.Resource;
 import com.coinbase.exchange.enrichment.Enricher;
 import com.coinbase.exchange.http.Http;
 import com.coinbase.exchange.http.HttpClient;
-import com.coinbase.exchange.model.Response;
+import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.account.AccountsRequest;
 
 public record AccountsApiImpl(HttpClient httpClient, Enricher requestEnricher) implements AccountsApi {

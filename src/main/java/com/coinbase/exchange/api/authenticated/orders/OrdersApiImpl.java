@@ -4,7 +4,7 @@ import com.coinbase.exchange.api.resource.Resource;
 import com.coinbase.exchange.enrichment.Enricher;
 import com.coinbase.exchange.http.Http;
 import com.coinbase.exchange.http.HttpClient;
-import com.coinbase.exchange.model.Response;
+import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.order.CancelAllOrdersRequest;
 import com.coinbase.exchange.model.order.CancelOrderByApiKeyRequest;
 import com.coinbase.exchange.model.order.CancelOrderByOrderIdRequest;
@@ -13,7 +13,6 @@ import com.coinbase.exchange.model.order.GetOrderByOrderIdRequest;
 import com.coinbase.exchange.model.order.LimitOrderRequest;
 import com.coinbase.exchange.model.order.ListOrdersRequest;
 import com.coinbase.exchange.model.order.MarketOrderRequest;
-import lombok.RequiredArgsConstructor;
 
 public record OrdersApiImpl(HttpClient httpClient, Enricher requestEnricher) implements OrdersApi {
 

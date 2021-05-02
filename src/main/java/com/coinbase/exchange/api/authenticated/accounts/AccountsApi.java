@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.authenticated.accounts;
 
-import com.coinbase.exchange.model.Response;
+import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.account.AccountsRequest;
 
 public interface AccountsApi {

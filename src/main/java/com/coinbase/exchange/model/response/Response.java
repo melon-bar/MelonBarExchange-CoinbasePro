@@ -1,4 +1,4 @@
-package com.coinbase.exchange.model;
+package com.coinbase.exchange.model.response;
 
 import com.coinbase.exchange.util.Format;
 
@@ -25,14 +25,27 @@ public record Response(String content, HttpHeaders headers, int statusCode) {
     }
 
     /**
-     * Applies input {@link Function} on <code>this</code> as a parameter, and returns the result.
+     * Applies input {@link PostProcessor} on <code>this</code> as a parameter, and returns the result.
      *
-     * @param postProcessor {@link Function}, a function accepting input {@link Response} and outputting {@link T}
-     * @param <T> Target type of output of <code>postProcessor</code>
+     * @param postProcessor {@link PostProcessor}, a function accepting input {@link Response} and outputting {@link T}
+     * @param <T> Target output type of <code>postProcessor</code>
      * @return Result of function <code>postProcessor</code>, an instance of {@link T}
      */
-    public <T> T process(final Function<Response, T> postProcessor) {
+    public <T> T process(final PostProcessor<T> postProcessor) {
         return postProcessor.apply(this);
+    }
+
+    /**
+     * Technically is no different than the <code>process()</code> that accepts {@link PostProcessor}, but provides more
+     * flexibility. For example, this extension allows the application of <code>andThen</code> and <code>compose</code>
+     * chained after an input {@link PostProcessor}.
+     *
+     * @param function {@link Function} that accepts input {@link Response} and outputs {@link T}
+     * @param <T> Target output type
+     * @return Result of function <code>function</code>
+     */
+    public <T> T process(final Function<Response, T> function) {
+        return function.apply(this);
     }
 
     /**

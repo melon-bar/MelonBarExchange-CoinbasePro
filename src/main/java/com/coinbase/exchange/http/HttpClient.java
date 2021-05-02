@@ -1,6 +1,6 @@
 package com.coinbase.exchange.http;
 
-import com.coinbase.exchange.model.Response;
+import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.request.BaseRequest;
 
 import java.net.http.HttpResponse;

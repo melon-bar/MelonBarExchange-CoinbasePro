@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.authenticated.orders;
 
-import com.coinbase.exchange.model.Response;
+import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.order.CancelAllOrdersRequest;
 import com.coinbase.exchange.model.order.CancelOrderByApiKeyRequest;
 import com.coinbase.exchange.model.order.CancelOrderByOrderIdRequest;

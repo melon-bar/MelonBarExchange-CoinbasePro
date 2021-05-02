@@ -1,6 +1,6 @@
 package com.coinbase.exchange.http.handler;
 
-import com.coinbase.exchange.model.Response;
+import com.coinbase.exchange.model.response.Response;
 
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Body handler for mapping the {@link HttpResponse} content to a {@link Response} instance.
  */
-public class ResponseHandler implements HttpResponse.BodyHandler<Response> {
+public class ResponseBodyHandler implements HttpResponse.BodyHandler<Response> {
 
     /**
      * Applies basic mapping to {@link Response} using the result {@link HttpResponse.ResponseInfo}. Stores the
