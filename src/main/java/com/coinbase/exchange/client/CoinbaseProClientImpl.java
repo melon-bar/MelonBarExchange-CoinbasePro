@@ -15,73 +15,81 @@ import com.coinbase.exchange.model.order.MarketOrderRequest;
 import com.coinbase.exchange.util.Guard;
 import com.coinbase.exchange.util.request.Pagination;
 
-public record CoinbaseProClientImpl(AccountsApi accountsApi, OrdersApi ordersApi) implements CoinbaseProClient {
+public class CoinbaseProClientImpl implements CoinbaseProClient {
 
+    private final AccountsApi accountsApi;
+    private final OrdersApi ordersApi;
+
+    CoinbaseProClientImpl(final AccountsApi accountsApi, final OrdersApi ordersApi) {
+        this.accountsApi = accountsApi;
+        this.ordersApi = ordersApi;
+    }
+    
     @Override
     public Response listAccounts(final AccountsRequest accountsRequest) {
         Guard.nonNull(accountsRequest);
-        return accountsApi().listAccounts(accountsRequest);
+        return accountsApi.listAccounts(accountsRequest);
     }
 
     @Override
     public Response getAccount(final AccountsRequest accountsRequest) {
         Guard.nonNull(accountsRequest);
-        return accountsApi().getAccount(accountsRequest);
+        return accountsApi.getAccount(accountsRequest);
     }
 
     @Override
     public Response getAccountHistory(final AccountsRequest accountsRequest, final Pagination pagination) {
         Guard.nonNull(accountsRequest);
         accountsRequest.setPagination(pagination);
-        return accountsApi().getAccountHistory(accountsRequest);
+        return accountsApi.getAccountHistory(accountsRequest);
     }
 
     @Override
     public Response placeLimitOrder(final LimitOrderRequest limitOrderRequest) {
         Guard.nonNull(limitOrderRequest);
-        return ordersApi().placeLimitOrder(limitOrderRequest);
+        return ordersApi.placeLimitOrder(limitOrderRequest);
     }
 
     @Override
     public Response placeMarketOrder(final MarketOrderRequest marketOrderRequest) {
         Guard.nonNull(marketOrderRequest);
-        return ordersApi().placeMarketOrder(marketOrderRequest);
+        return ordersApi.placeMarketOrder(marketOrderRequest);
     }
 
     @Override
     public Response cancelOrderByApiKey(final CancelOrderByApiKeyRequest cancelOrderByApiKeyRequest) {
         Guard.nonNull(cancelOrderByApiKeyRequest);
-        return ordersApi().cancelOrderByApiKey(cancelOrderByApiKeyRequest);
+        return ordersApi.cancelOrderByApiKey(cancelOrderByApiKeyRequest);
     }
 
     @Override
     public Response cancelOrderByOrderId(final CancelOrderByOrderIdRequest cancelOrderByOrderIdRequest) {
         Guard.nonNull(cancelOrderByOrderIdRequest);
-        return ordersApi().cancelOrderByOrderId(cancelOrderByOrderIdRequest);
+        return ordersApi.cancelOrderByOrderId(cancelOrderByOrderIdRequest);
     }
 
     @Override
     public Response cancelAllOrders(final CancelAllOrdersRequest cancelAllOrdersRequest) {
         Guard.nonNull(cancelAllOrdersRequest);
-        return ordersApi().cancelAllOrders(cancelAllOrdersRequest);
+        return ordersApi.cancelAllOrders(cancelAllOrdersRequest);
     }
 
     @Override
     public Response listOrders(final ListOrdersRequest listOrdersRequest, final Pagination pagination) {
         Guard.nonNull(listOrdersRequest);
         listOrdersRequest.setPagination(pagination);
-        return ordersApi().listOrders(listOrdersRequest);
+        return ordersApi.listOrders(listOrdersRequest);
     }
 
     @Override
     public Response getOrderByApiKey(final GetOrderByApiKeyRequest getOrderByApiKeyRequest) {
         Guard.nonNull(getOrderByApiKeyRequest);
-        return ordersApi().getOrderByApiKey(getOrderByApiKeyRequest);
+        return ordersApi.getOrderByApiKey(getOrderByApiKeyRequest);
     }
 
     @Override
     public Response getOrderByOrderId(final GetOrderByOrderIdRequest getOrderByOrderIdRequest) {
         Guard.nonNull(getOrderByOrderIdRequest);
-        return ordersApi().getOrderByOrderId(getOrderByOrderIdRequest);
+        return ordersApi.getOrderByOrderId(getOrderByOrderIdRequest);
     }
 }
