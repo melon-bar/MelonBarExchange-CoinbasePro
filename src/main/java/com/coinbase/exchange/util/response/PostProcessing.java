@@ -3,9 +3,11 @@ package com.coinbase.exchange.util.response;
 import com.coinbase.exchange.model.response.PostProcessor;
 import com.coinbase.exchange.util.Format;
 import com.coinbase.exchange.util.Guard;
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -38,11 +40,26 @@ public final class PostProcessing {
     public static PostProcessor<String> getJsonValueAsString(final String key) {
         return response -> asJson()
                 .andThen(jsonNode -> jsonNode
-                        .map(_jsonNode -> _jsonNode.get(key))
+                        .map(_jsonNode -> getJsonValue(_jsonNode, key))
                         .map(JsonNode::toString)
+                        .filter(StringUtils::isNotEmpty)
                         // key does not exist in json node, or failed to extract due to other issues (failed parse)
                         .orElseThrow(() -> new RuntimeException(Format.format(
-                                "Could not extract key [{}] from response content [{}]", key, response.content()))))
+                                "Could not extract key [{}] from response content [{}]", key, jsonNode.get()))))
+                .apply(response);
+    }
+
+    /**
+     * Converts the response content from {@link JsonNode} to a pretty string for debugging/logging purposes.
+     *
+     * @return Pretty printed json string
+     */
+    public static PostProcessor<String> asPrettyJsonString() {
+        return response -> asJson()
+                .andThen(jsonNode -> jsonNode
+                        .map(JsonNode::toPrettyString)
+                        // empty result
+                        .orElse("{}"))
                 .apply(response);
     }
 
@@ -63,5 +80,20 @@ public final class PostProcessing {
                     ioException.getClass().getName(), jsonString, ioException);
         }
         return null;
+    }
+
+    /**
+     * Extracts value from {@link JsonNode} provided a path. If the input path refers to just a depth=1 key, then
+     * the call defaults to {@link JsonNode#get(String)}.
+     *
+     * @param jsonNode {@link JsonNode}
+     * @param path Path to value
+     * @return {@link JsonNode} at the specified path, or {@link com.fasterxml.jackson.databind.node.MissingNode} if
+     *  input path is invalid
+     */
+    private static JsonNode getJsonValue(final JsonNode jsonNode, final String path) {
+        return StringUtils.contains(path, JsonPointer.SEPARATOR)
+                ? jsonNode.at(path)
+                : jsonNode.get(path);
     }
 }

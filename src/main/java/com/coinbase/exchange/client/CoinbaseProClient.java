@@ -1,5 +1,6 @@
 package com.coinbase.exchange.client;
 
+import com.coinbase.exchange.model.oracle.OracleRequest;
 import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.account.AccountsRequest;
 import com.coinbase.exchange.model.order.CancelAllOrdersRequest;
@@ -35,4 +36,6 @@ public interface CoinbaseProClient {
     Response getOrderByApiKey(final GetOrderByApiKeyRequest getOrderByApiKeyRequest);
 
     Response getOrderByOrderId(final GetOrderByOrderIdRequest getOrderByOrderIdRequest);
+
+    Response getOracle(final OracleRequest oracleRequest);
 }

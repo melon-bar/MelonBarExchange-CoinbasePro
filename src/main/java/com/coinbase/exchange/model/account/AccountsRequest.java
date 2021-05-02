@@ -8,7 +8,6 @@ import lombok.Getter;
 /**
  * Requests for Coinbase Pro accounts API.
  */
-@Getter
 @Builder
 public class AccountsRequest extends BaseRequest {
 

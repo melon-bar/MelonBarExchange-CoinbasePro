@@ -32,7 +32,12 @@ public enum Resource {
      */
     ORDER               ("/orders",             expects(0)),
     ORDER_BY_API_KEY    ("/orders/{}",          expects(1)),
-    ORDER_BY_ORDER_ID   ("/orders/client::{}",  expects(1));
+    ORDER_BY_ORDER_ID   ("/orders/client::{}",  expects(1)),
+
+    /**
+     * Oracle API resources
+     */
+    ORACLE              ("/oracle",             expects(0));
 
     // resource URI format
     @Getter private final String uri;

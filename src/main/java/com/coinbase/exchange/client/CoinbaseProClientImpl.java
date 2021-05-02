@@ -1,7 +1,9 @@
 package com.coinbase.exchange.client;
 
 import com.coinbase.exchange.api.authenticated.accounts.AccountsApi;
+import com.coinbase.exchange.api.authenticated.oracle.OracleApi;
 import com.coinbase.exchange.api.authenticated.orders.OrdersApi;
+import com.coinbase.exchange.model.oracle.OracleRequest;
 import com.coinbase.exchange.model.response.Response;
 import com.coinbase.exchange.model.account.AccountsRequest;
 import com.coinbase.exchange.model.order.CancelAllOrdersRequest;
@@ -14,17 +16,18 @@ import com.coinbase.exchange.model.order.ListOrdersRequest;
 import com.coinbase.exchange.model.order.MarketOrderRequest;
 import com.coinbase.exchange.util.Guard;
 import com.coinbase.exchange.util.request.Pagination;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class CoinbaseProClientImpl implements CoinbaseProClient {
 
     private final AccountsApi accountsApi;
     private final OrdersApi ordersApi;
+    private final OracleApi oracleApi;
 
-    CoinbaseProClientImpl(final AccountsApi accountsApi, final OrdersApi ordersApi) {
-        this.accountsApi = accountsApi;
-        this.ordersApi = ordersApi;
-    }
-    
+    // accounts
+
     @Override
     public Response listAccounts(final AccountsRequest accountsRequest) {
         Guard.nonNull(accountsRequest);
@@ -43,6 +46,8 @@ public class CoinbaseProClientImpl implements CoinbaseProClient {
         accountsRequest.setPagination(pagination);
         return accountsApi.getAccountHistory(accountsRequest);
     }
+
+    // orders
 
     @Override
     public Response placeLimitOrder(final LimitOrderRequest limitOrderRequest) {
@@ -91,5 +96,13 @@ public class CoinbaseProClientImpl implements CoinbaseProClient {
     public Response getOrderByOrderId(final GetOrderByOrderIdRequest getOrderByOrderIdRequest) {
         Guard.nonNull(getOrderByOrderIdRequest);
         return ordersApi.getOrderByOrderId(getOrderByOrderIdRequest);
+    }
+
+    // oracle
+
+    @Override
+    public Response getOracle(final OracleRequest oracleRequest) {
+        Guard.nonNull(oracleRequest);
+        return oracleApi.getOracle(oracleRequest);
     }
 }
