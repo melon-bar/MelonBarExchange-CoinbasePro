@@ -8,11 +8,25 @@
 ---------------------------------
 ## Example usage:
 
+#### Initialize Coinbase Pro client:
+```java
+// barebone requirements for making Coinbase Pro API requests
+final Authentication authentication = new CoinbaseProAuthentication(API_KEY, API_PASSWORD, API_SECRET);
+final HttpClient httpClient = new HttpClientImpl(authentication, java.net.http.HttpClient.newHttpClient());
+final Enricher requestEnricher = new RequestEnricher();
+
+// API implementations
+final AccountsApi accountsApi = new AccountsApiImpl(httpClient, requestEnricher);
+final OrdersApi ordersApi = new OrdersApiImpl(httpClient, requestEnricher);
+...
+
+// init Coinbase Pro client
+final CoinbaseProClient coinbaseProClient = new CoinbaseProClientImpl(accountsApi, ordersApi, ...);
+```
+
 #### Market order:
 ```java
-/**
- * Market order to buy 0.01 ETH using USD.
- */
+// market order to buy 0.01 ETH using USD.
 final MarketOrderRequest marketOrderRequest = MarketOrderRequest.builder()
                 .orderSide(OrderSide.BUY)
                 .product(new Product(Currency.Unit.ETH, Currency.Unit.USD))
