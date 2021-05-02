@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.concurrent.Future;
 
 /**
  * HTTP client record implementation, which uses {@link java.net.http.HttpClient} as the underlying driver for
@@ -44,6 +45,29 @@ public record HttpClientImpl(Authentication authentication,
             return httpClient.send(generateHttpRequest(request), new ResponseBodyHandler());
         } catch (Exception exception) {
             log.error(Format.format("Something went wrong while dispatching request: [{}]",
+                    Requests.toString(request)), exception);
+        }
+        return null;
+    }
+
+    /**
+     * Dispatches an {@link HttpRequest} <i>asynchronously</i>, generated from {@link BaseRequest} using
+     * {@link java.net.http.HttpClient}. Handles response body using {@link ResponseBodyHandler}. The response body,
+     * {@link Response}, contains the result headers, status code, and string content.
+     *
+     * <p> The caller of this dispatch has authority of any post-processing or object mapping on the result.
+     *
+     * @param request Extension of {@link BaseRequest}
+     * @return {@link Future<HttpResponse<Response>>}
+     */
+    @Override
+    public Future<HttpResponse<Response>> sendAsync(final BaseRequest request) {
+        try {
+            log.info("Dispatching request [{}] asynchronously with method [{}] to URL: [{}]",
+                    request.getClass().getSimpleName(), request.getMethod(), request.getUri());
+            return httpClient.sendAsync(generateHttpRequest(request), new ResponseBodyHandler());
+        } catch (Exception exception) {
+            log.error(Format.format("Something went wrong while dispatching async request: [{}]",
                     Requests.toString(request)), exception);
         }
         return null;
