@@ -4,8 +4,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.coinbase.exchange</groupId>
-    <artifactId>CoinbaseProExchange</artifactId>
+    <groupId>com.melonbar.exchange.coinbase</groupId>
+    <artifactId>melonbar-cbpx</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>Melon Bar Exchange - Coinbase Pro</name>
