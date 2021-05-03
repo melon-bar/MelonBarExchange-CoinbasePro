@@ -1,5 +1,6 @@
 package com.melonbar.exchange.coinbase.client;
 
+import com.melonbar.exchange.coinbase.model.fills.ListFillsRequest;
 import com.melonbar.exchange.coinbase.model.oracle.OracleRequest;
 import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.model.account.AccountsRequest;
@@ -38,4 +39,6 @@ public interface CoinbaseProClient {
     Response getOrderByOrderId(final GetOrderByOrderIdRequest getOrderByOrderIdRequest);
 
     Response getOracle(final OracleRequest oracleRequest);
+
+    Response listFills(final ListFillsRequest listFillsRequest, final Pagination pagination);
 }

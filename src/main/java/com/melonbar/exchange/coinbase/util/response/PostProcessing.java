@@ -32,8 +32,6 @@ public final class PostProcessing {
      * Converts the response content into a {@link JsonNode} using <code>asJson()</code> first, then attempts
      * to extract the value as a string using parameter <code>key</code> as a key.
      *
-     * <p> TODO: add support for depth > 1 json parsing with inputs like <code>getJsonValueAsString("key1.key2")</code>
-     *
      * @param key Json key
      * @return String value corresponding to json key
      */

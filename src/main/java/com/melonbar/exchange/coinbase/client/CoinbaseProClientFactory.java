@@ -1,6 +1,7 @@
 package com.melonbar.exchange.coinbase.client;
 
 import com.melonbar.exchange.coinbase.api.authenticated.accounts.AccountsApiImpl;
+import com.melonbar.exchange.coinbase.api.authenticated.fills.FillsApiImpl;
 import com.melonbar.exchange.coinbase.api.authenticated.oracle.OracleApiImpl;
 import com.melonbar.exchange.coinbase.api.authenticated.orders.OrdersApiImpl;
 import com.melonbar.exchange.coinbase.authentication.Authentication;
@@ -34,6 +35,7 @@ public final class CoinbaseProClientFactory {
         return new CoinbaseProClientImpl(
                 new AccountsApiImpl(httpClient, requestEnricher),
                 new OrdersApiImpl(httpClient, requestEnricher),
+                new FillsApiImpl(httpClient, requestEnricher),
                 new OracleApiImpl(httpClient, requestEnricher));
     }
 }

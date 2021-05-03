@@ -1,4 +1,4 @@
-package com.melonbar.exchange.coinbase.model;
+package com.melonbar.exchange.coinbase.model.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

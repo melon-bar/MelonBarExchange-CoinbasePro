@@ -31,11 +31,6 @@ public @interface BodyField {
     String key();
 
     /**
-     * @return Expected json field value type
-     */
-    RequestBodyFieldType jsonType() default RequestBodyFieldType.STRING;
-
-    /**
      * @return True if field is required for generating request body
      */
     boolean required() default false;

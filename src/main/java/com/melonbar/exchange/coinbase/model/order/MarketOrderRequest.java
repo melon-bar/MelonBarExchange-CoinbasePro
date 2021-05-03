@@ -1,7 +1,7 @@
 package com.melonbar.exchange.coinbase.model.order;
 
 import com.melonbar.exchange.coinbase.annotation.BodyField;
-import com.melonbar.exchange.coinbase.model.Product;
+import com.melonbar.exchange.coinbase.model.core.Product;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderSide;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderStop;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderType;

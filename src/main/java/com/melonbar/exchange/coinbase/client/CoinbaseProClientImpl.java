@@ -1,8 +1,10 @@
 package com.melonbar.exchange.coinbase.client;
 
 import com.melonbar.exchange.coinbase.api.authenticated.accounts.AccountsApi;
+import com.melonbar.exchange.coinbase.api.authenticated.fills.FillsApi;
 import com.melonbar.exchange.coinbase.api.authenticated.oracle.OracleApi;
 import com.melonbar.exchange.coinbase.api.authenticated.orders.OrdersApi;
+import com.melonbar.exchange.coinbase.model.fills.ListFillsRequest;
 import com.melonbar.exchange.coinbase.model.oracle.OracleRequest;
 import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.model.account.AccountsRequest;
@@ -24,6 +26,7 @@ public class CoinbaseProClientImpl implements CoinbaseProClient {
 
     private final AccountsApi accountsApi;
     private final OrdersApi ordersApi;
+    private final FillsApi fillsApi;
     private final OracleApi oracleApi;
 
     // accounts
@@ -96,6 +99,15 @@ public class CoinbaseProClientImpl implements CoinbaseProClient {
     public Response getOrderByOrderId(final GetOrderByOrderIdRequest getOrderByOrderIdRequest) {
         Guard.nonNull(getOrderByOrderIdRequest);
         return ordersApi.getOrderByOrderId(getOrderByOrderIdRequest);
+    }
+
+    // fills
+
+    @Override
+    public Response listFills(final ListFillsRequest listFillsRequest, final Pagination pagination) {
+        Guard.nonNull(listFillsRequest);
+        listFillsRequest.setPagination(pagination);
+        return fillsApi.listFills(listFillsRequest);
     }
 
     // oracle

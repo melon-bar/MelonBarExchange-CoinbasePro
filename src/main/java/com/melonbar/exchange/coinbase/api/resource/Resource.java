@@ -35,7 +35,12 @@ public enum Resource {
     ORDER_BY_ORDER_ID   ("/orders/client::{}",  expects(1)),
 
     /**
-     * Oracle API resources
+     * Fills API resources.
+     */
+    FILLS               ("/fills",              expects(0)),
+
+    /**
+     * Oracle API resources.
      */
     ORACLE              ("/oracle",             expects(0));
 
