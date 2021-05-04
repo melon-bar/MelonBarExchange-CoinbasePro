@@ -1,6 +1,7 @@
 package com.melonbar.exchange.coinbase.util.response;
 
 import com.melonbar.exchange.coinbase.model.response.PostProcessor;
+import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.util.Format;
 import com.melonbar.exchange.coinbase.util.Guard;
 import com.fasterxml.jackson.core.JsonPointer;
@@ -17,6 +18,18 @@ import java.util.Optional;
  */
 @Slf4j
 public final class PostProcessing {
+
+    /**
+     * Convert response body content to an {@link Optional} containing an instance of the desired input {@link Class}.
+     * The {@link Optional} will be empty if an error occurred during mapping.
+     *
+     * @param clazz Mapped object
+     * @param <T> Desired type of result wrapped by {@link Optional}
+     * @return Instance of {@link T} mapped by {@link Response} content
+     */
+    public static <T> PostProcessor<Optional<T>> asObject(final Class<T> clazz) {
+        return response -> Optional.ofNullable(mapToObject(response.content(), clazz));
+    }
 
     /**
      * Convert response body content to an {@link Optional} containing {@link JsonNode}, where the value is
@@ -59,6 +72,24 @@ public final class PostProcessing {
                         // empty result
                         .orElse("{}"))
                 .apply(response);
+    }
+
+    /**
+     * Maps input json string to an instance of {@link T} using {@link ObjectMapper}.
+     *
+     * @param jsonString String in json format
+     * @param clazz Class of mapped object
+     * @param <T> Desired type of result
+     * @return {@link T}, null if failure to map
+     */
+    private static <T> T mapToObject(final String jsonString, final Class<T> clazz) {
+        try {
+            return new ObjectMapper().readValue(jsonString, clazz);
+        } catch (IOException ioException) {
+            log.error("Exception [{}] thrown while attempting to map to [{}] from json: [{}]",
+                    ioException.getClass().getName(), clazz.getName(), jsonString);
+        }
+        return null;
     }
 
     /**
