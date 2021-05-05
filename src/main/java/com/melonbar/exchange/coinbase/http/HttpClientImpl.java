@@ -1,6 +1,8 @@
 package com.melonbar.exchange.coinbase.http;
 
 import com.melonbar.exchange.coinbase.authentication.Authentication;
+import com.melonbar.exchange.coinbase.exception.BadRequestException;
+import com.melonbar.exchange.coinbase.exception.TransientException;
 import com.melonbar.exchange.coinbase.http.handler.ResponseBodyHandler;
 import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;
@@ -39,15 +41,19 @@ public record HttpClientImpl(Authentication authentication,
      */
     @Override
     public HttpResponse<Response> send(final BaseRequest request) {
+        final HttpResponse<Response> httpResponse;
         try {
             log.info("Dispatching request [{}] with method [{}] to URL: [{}]",
                     request.getClass().getSimpleName(), request.getMethod(), request.getUri());
-            return httpClient.send(generateHttpRequest(request), new ResponseBodyHandler());
+            httpResponse = httpClient.send(generateHttpRequest(request),
+                    new ResponseBodyHandler());
         } catch (Exception exception) {
             log.error(Format.format("Something went wrong while dispatching request: [{}]",
                     Requests.toString(request)), exception);
+            return null;
         }
-        return null;
+        validateRequestStatus(httpResponse);
+        return httpResponse;
     }
 
     /**
@@ -93,5 +99,49 @@ public record HttpClientImpl(Authentication authentication,
                     request.getMethod().name(),
                     HttpRequest.BodyPublishers.ofString(request.getBody()))
                 .build();
+    }
+
+    /**
+     * Validate the response status code based on the Coinbase Pro documentation for HTTP status codes.
+     * Currently this form of immediate post-response validation is only done for sync dispatch. Requests
+     * sent during async dispatch should have status code handling done by the caller, otherwise awaiting
+     * for the status code within <code>sendAsync</code> makes it no different functionally than
+     * <code>sendAsync</code>.
+     *
+     * <p> The decisions for throwing exceptions are based on the provided example
+     * errors by Coinbase Pro:
+     *
+     * <p> 200 - Success
+     * <p> 400 - Bad Request
+     * <p> 401 - Unauthorized
+     * <p> 403 - Forbidden
+     * <p> 404 - Not Found
+     * <p> 500 - Internal Server Error
+     *
+     * @param response {@link HttpResponse}
+     * @throws BadRequestException for unrecoverable errors caused by bad requests
+     * @throws TransientException for recoverable errors due to internal server issues
+     */
+    private void validateRequestStatus(final HttpResponse<Response> response) {
+        switch (response.statusCode() / 100) {
+            case 2:
+                // success
+                return;
+            case 4:
+                // non-retryable
+                throw new BadRequestException(
+                        Format.format("Received code: [{}], request could not be processed"
+                                + " due to invalid input. Body: [{}].", response.statusCode(),
+                                response.body().content()));
+            case 5:
+                // Coinbase Pro internal server error, retryable
+                throw new TransientException(
+                        Format.format("Received code: [{}], request could not be processed. "
+                                + "Body: [{}].", response.statusCode(), response.body().content()));
+            default:
+                // unrecognized status code
+                log.warn("Received unknown code [{}] with response body: [{}]", response.statusCode(),
+                        response.body().content());
+        }
     }
 }

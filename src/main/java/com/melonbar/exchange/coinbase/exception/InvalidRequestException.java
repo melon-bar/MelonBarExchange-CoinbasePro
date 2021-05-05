@@ -1,8 +1,5 @@
 package com.melonbar.exchange.coinbase.exception;
 
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor
 public class InvalidRequestException extends RuntimeException {
 
     public InvalidRequestException(final String message) {
