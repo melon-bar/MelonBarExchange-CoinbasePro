@@ -41,10 +41,11 @@ public final class PostProcessing {
     }
 
     /**
-     * TODO
+     * Converts the response content into a {@link JsonNode} using <code>asJson()</code> first, then attempts
+     * to extract the {@link JsonNode} located at the path <code>key</code>.
      *
-     * @param key
-     * @return
+     * @param key Json key
+     * @return {@link JsonNode} corresponding to json key
      */
     public static PostProcessor<Optional<JsonNode>> getJsonValue(final String key) {
         return response -> asJson()
