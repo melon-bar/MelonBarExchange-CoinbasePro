@@ -1,12 +1,11 @@
 package com.melonbar.exchange.coinbase.util.response;
 
-import com.melonbar.exchange.coinbase.model.response.PostProcessor;
-import com.melonbar.exchange.coinbase.model.response.Response;
-import com.melonbar.exchange.coinbase.util.Format;
-import com.melonbar.exchange.coinbase.util.Guard;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.melonbar.exchange.coinbase.model.response.PostProcessor;
+import com.melonbar.exchange.coinbase.model.response.Response;
+import com.melonbar.exchange.coinbase.util.Guard;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,6 +41,19 @@ public final class PostProcessing {
     }
 
     /**
+     * TODO
+     *
+     * @param key
+     * @return
+     */
+    public static PostProcessor<Optional<JsonNode>> getJsonValue(final String key) {
+        return response -> asJson()
+                .andThen(jsonNode -> jsonNode
+                        .map(_jsonNode -> getJsonValue(_jsonNode, key)))
+                .apply(response);
+    }
+
+    /**
      * Converts the response content into a {@link JsonNode} using <code>asJson()</code> first, then attempts
      * to extract the value as a string using parameter <code>key</code> as a key.
      *
@@ -49,14 +61,8 @@ public final class PostProcessing {
      * @return String value corresponding to json key
      */
     public static PostProcessor<String> getJsonValueAsString(final String key) {
-        return response -> asJson()
-                .andThen(jsonNode -> jsonNode
-                        .map(_jsonNode -> getJsonValue(_jsonNode, key))
-                        .map(JsonNode::toString)
-                        .filter(StringUtils::isNotEmpty)
-                        // key does not exist in json node, or failed to extract due to other issues (failed parse)
-                        .orElseThrow(() -> new RuntimeException(Format.format(
-                                "Could not extract key [{}] from response content [{}]", key, jsonNode.get()))))
+        return response -> getJsonValue(key)
+                .andThen(maybeJsonNode -> String.valueOf(maybeJsonNode.orElse(null)))
                 .apply(response);
     }
 

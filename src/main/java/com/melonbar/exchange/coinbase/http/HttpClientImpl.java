@@ -69,8 +69,10 @@ public record HttpClientImpl(Authentication authentication,
     @Override
     public Future<HttpResponse<Response>> sendAsync(final BaseRequest request) {
         try {
-            log.info("Dispatching request [{}] asynchronously with method [{}] to URL: [{}]",
-                    request.getClass().getSimpleName(), request.getMethod(), request.getUri());
+            if (log.isDebugEnabled()) {
+                log.debug("Dispatching request [{}] asynchronously with method [{}] to URL: [{}]",
+                        request.getClass().getSimpleName(), request.getMethod(), request.getUri());
+            }
             return httpClient.sendAsync(generateHttpRequest(request), new ResponseBodyHandler());
         } catch (Exception exception) {
             log.error(Format.format("Something went wrong while dispatching async request: [{}]",
