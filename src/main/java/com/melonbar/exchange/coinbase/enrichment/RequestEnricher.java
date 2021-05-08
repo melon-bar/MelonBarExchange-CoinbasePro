@@ -6,6 +6,7 @@ import com.melonbar.exchange.coinbase.api.resource.Resource;
 import com.melonbar.exchange.coinbase.exception.InvalidRequestException;
 import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;
+import com.melonbar.exchange.coinbase.util.AppConfig;
 import com.melonbar.exchange.coinbase.util.Format;
 import com.melonbar.exchange.coinbase.util.Guard;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,11 +28,6 @@ import java.util.Optional;
  */
 @Slf4j
 public class RequestEnricher implements Enricher {
-
-    /**
-     * Coinbase Pro URL.
-     */
-    private static final String COINBASE_PRO_ENDPOINT = "https://api.pro.coinbase.com";
 
     /**
      * Suffix for deduping JSON keys.
@@ -68,7 +64,7 @@ public class RequestEnricher implements Enricher {
         request.setMethod(method);
         try {
             request.setRequestPath(generateUri(resource, request));
-            request.setUri(COINBASE_PRO_ENDPOINT + request.getRequestPath());
+            request.setUri(AppConfig.COINBASE_PRO_API_ENDPOINT + request.getRequestPath());
             request.setBody(generateRequestBody(request));
         } catch (IllegalAccessException | JsonProcessingException exception) {
             log.error("Failed to complete request enrichment, current request state: {}", request);
