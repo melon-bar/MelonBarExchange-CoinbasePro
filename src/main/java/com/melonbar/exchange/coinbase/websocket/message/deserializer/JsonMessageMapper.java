@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.melonbar.exchange.coinbase.model.core.Product;
+import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.websocket.message.JsonMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,7 @@ public class JsonMessageMapper {
 
     static {
         final SimpleModule productModule = new SimpleModule();
-        productModule.addDeserializer(Product.class, new ProductDeserializer());
+        productModule.addDeserializer(ProductId.class, new ProductIdDeserializer());
 
         OBJECT_MAPPER.registerModule(productModule);
         OBJECT_MAPPER.registerModule(new JodaModule());

@@ -9,13 +9,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @param left Base currency
  * @param right Quote currency
  */
-public record Product(Currency.Unit left, Currency.Unit right) {
+public record ProductId(Currency.Unit left, Currency.Unit right) {
 
     public static final String DELIMITER = "-";
-    public static final Product ETH_USD = new Product(Currency.Unit.ETH, Currency.Unit.USD);
+    public static final ProductId ETH_USD = new ProductId(Currency.Unit.ETH, Currency.Unit.USD);
 
-    public static Product of(final String left, final String right) {
-        return new Product(
+    public static ProductId of(final String left, final String right) {
+        return new ProductId(
                 Currency.Unit.valueOf(left.toUpperCase()),
                 Currency.Unit.valueOf(right.toUpperCase()));
     }

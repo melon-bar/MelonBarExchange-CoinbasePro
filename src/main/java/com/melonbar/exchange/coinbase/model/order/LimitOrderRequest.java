@@ -1,7 +1,7 @@
 package com.melonbar.exchange.coinbase.model.order;
 
 import com.melonbar.exchange.coinbase.annotation.BodyField;
-import com.melonbar.exchange.coinbase.model.core.Product;
+import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderSide;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderStop;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderType;
@@ -21,7 +21,7 @@ public class LimitOrderRequest extends BaseRequest {
     private final OrderSide orderSide;
 
     @BodyField(key = "product_id", required = true)
-    private final Product product;
+    private final ProductId productId;
 
     @BodyField(key = "price", required = true)
     private final BigDecimal price;
