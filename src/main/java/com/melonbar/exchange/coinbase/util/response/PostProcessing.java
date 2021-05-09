@@ -18,6 +18,8 @@ import java.util.Optional;
 @Slf4j
 public final class PostProcessing {
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     /**
      * Convert response body content to an {@link Optional} containing an instance of the desired input {@link Class}.
      * The {@link Optional} will be empty if an error occurred during mapping.
@@ -91,7 +93,7 @@ public final class PostProcessing {
      */
     private static <T> T mapToObject(final String jsonString, final Class<T> clazz) {
         try {
-            return new ObjectMapper().readValue(jsonString, clazz);
+            return OBJECT_MAPPER.reader().readValue(jsonString, clazz);
         } catch (IOException ioException) {
             log.error("Exception [{}] thrown while attempting to map to [{}] from json: [{}]",
                     ioException.getClass().getName(), clazz.getName(), jsonString);

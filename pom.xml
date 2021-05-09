@@ -97,6 +97,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Handles json deserialization handling for Joda types. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+
         <!-- Date and time library to replace JDK date handling. -->
         <dependency>
             <groupId>joda-time</groupId>
