@@ -1,9 +1,7 @@
 # TODO:
-* AspectJ wiring
-* TESTING
-* Implement the rest of the APIs
-* More javadoc
-* De-lombok, too hacky
+* Track TODO in `Issues` tab
+* Implement all APIs
+* Separate core definitions into another package like `MelonBarCore` or `MelonBarCommons`
 
 ---------------------------------
 ## Example usage:
@@ -29,7 +27,7 @@ final CoinbaseProClient coinbaseProClient = new CoinbaseProClientImpl(accountsAp
 // market order to buy 0.01 ETH using USD.
 final MarketOrderRequest marketOrderRequest = MarketOrderRequest.builder()
                 .orderSide(OrderSide.BUY)
-                .product(new Product(Currency.Unit.ETH, Currency.Unit.USD))
+                .product(Product.ETH_USD)
                 .size(new BigDecimal("0.01"))
                 .build();
 final Response response = coinbaseProClient.placeMarketOrder(marketOrderRequest);
