@@ -1,5 +1,6 @@
 package com.melonbar.exchange.coinbase.model.core;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,5 +14,10 @@ public class Currency {
         USD("US Dollar");
 
         private final String label;
+
+        @JsonValue
+        public String toJson() {
+            return toString();
+        }
     }
 }

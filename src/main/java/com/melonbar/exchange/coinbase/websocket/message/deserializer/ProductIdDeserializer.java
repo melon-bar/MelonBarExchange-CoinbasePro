@@ -15,7 +15,7 @@ public class ProductIdDeserializer extends JsonDeserializer<ProductId> {
     public ProductId deserialize(final JsonParser jsonParser, final DeserializationContext __)
             throws IOException {
         if (StringUtils.isEmpty(jsonParser.getText()) || !jsonParser.getText().contains(ProductId.DELIMITER)) {
-            throw new IllegalStateException(Format.format("Invalid text [{}] for Product deserialization",
+            throw new IllegalArgumentException(Format.format("Invalid text [{}] for Product deserialization",
                     jsonParser.getText()));
         }
         final String[] split = jsonParser.getText().split(ProductId.DELIMITER);

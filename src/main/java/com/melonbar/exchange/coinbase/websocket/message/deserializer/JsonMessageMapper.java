@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.websocket.message.JsonMessage;
+import com.melonbar.exchange.coinbase.websocket.message.model.L2OrderTuple;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -18,10 +19,11 @@ public class JsonMessageMapper {
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
-        final SimpleModule productModule = new SimpleModule();
-        productModule.addDeserializer(ProductId.class, new ProductIdDeserializer());
+        final SimpleModule websocketFeedMessageModule = new SimpleModule();
+        websocketFeedMessageModule.addDeserializer(ProductId.class, new ProductIdDeserializer());
+        websocketFeedMessageModule.addDeserializer(L2OrderTuple.class, new OrderDeserializer());
 
-        OBJECT_MAPPER.registerModule(productModule);
+        OBJECT_MAPPER.registerModule(websocketFeedMessageModule);
         OBJECT_MAPPER.registerModule(new JodaModule());
         OBJECT_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
