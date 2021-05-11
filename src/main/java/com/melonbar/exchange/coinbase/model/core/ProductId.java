@@ -20,10 +20,6 @@ public record ProductId(Currency.Unit left, Currency.Unit right) {
                 Currency.Unit.valueOf(right.toUpperCase()));
     }
 
-    public static ProductId[] of(final ProductId ... productIds) {
-        return productIds;
-    }
-
     @Override
     public String toString() {
         return left.name() + DELIMITER + right.name();
