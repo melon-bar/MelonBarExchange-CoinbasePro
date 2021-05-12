@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class L2UpdateMessage extends JsonMessage {
+public class L2UpdateMessage extends FeedMessage {
 
     @JsonProperty("changes") private L2OrderTuple[] changes;
 }

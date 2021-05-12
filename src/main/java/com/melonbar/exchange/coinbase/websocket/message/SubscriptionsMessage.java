@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubscriptionsMessage extends JsonMessage {
+public class SubscriptionsMessage extends FeedMessage {
 
     @JsonProperty("channels") private Channel[] channels;
 }

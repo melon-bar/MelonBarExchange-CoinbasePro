@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UnsubscribeMessage extends JsonMessage {
+public class UnsubscribeMessage extends FeedMessage {
 
     @JsonProperty("product_ids") private ProductId[] productIds;
     @JsonProperty("channels") private Channel[] channels;

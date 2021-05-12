@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorMessage extends JsonMessage {
+public class ErrorMessage extends FeedMessage {
 
     @JsonProperty("message") private String message;
 }

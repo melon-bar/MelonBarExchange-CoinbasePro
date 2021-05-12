@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TickerMessage extends JsonMessage {
+public class TickerMessage extends FeedMessage {
 
     @JsonProperty("trade_id") private Long tradeId;
     @JsonProperty("price") private BigDecimal price;

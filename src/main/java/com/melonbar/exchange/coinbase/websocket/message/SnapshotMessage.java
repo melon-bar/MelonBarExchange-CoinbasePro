@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SnapshotMessage extends JsonMessage {
+public class SnapshotMessage extends FeedMessage {
 
     @JsonProperty("bids") private L2OrderTuple[] bids;
     @JsonProperty("asks") private L2OrderTuple[] asks;

@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
-import com.melonbar.exchange.coinbase.websocket.message.JsonMessage;
+import com.melonbar.exchange.coinbase.websocket.MessageTypes;
+import com.melonbar.exchange.coinbase.websocket.message.FeedMessage;
 import com.melonbar.exchange.coinbase.websocket.message.model.L2OrderTuple;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class JsonMessageMapper {
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private final static String TYPE_FIELD = "\"type\":";
 
     static {
         final SimpleModule websocketFeedMessageModule = new SimpleModule();
@@ -28,7 +31,7 @@ public class JsonMessageMapper {
         OBJECT_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
-    public static <T extends JsonMessage> String objectToJson(final T jsonMessage) {
+    public static <T extends FeedMessage> String objectToJson(final T jsonMessage) {
         try {
             return OBJECT_MAPPER.writer().writeValueAsString(jsonMessage);
         } catch (JsonProcessingException jsonProcessingException) {
@@ -38,7 +41,7 @@ public class JsonMessageMapper {
         return "{}";
     }
 
-    public static <T extends JsonMessage> Optional<T> jsonToObject(final String jsonString, final Class<T> clazz) {
+    public static <T extends FeedMessage> Optional<T> jsonToObject(final String jsonString, final Class<T> clazz) {
         try {
             return Optional.ofNullable(OBJECT_MAPPER.reader().readValue(jsonString, clazz));
         } catch (IOException ioException) {
@@ -46,5 +49,23 @@ public class JsonMessageMapper {
                     clazz.getName(), ioException);
         }
         return Optional.empty();
+    }
+
+    public static Optional<? extends FeedMessage> jsonToObject(final String jsonString) {
+        final String type = extractType(jsonString);
+        return StringUtils.isEmpty(type)
+                ? Optional.empty()
+                : jsonToObject(jsonString, MessageTypes.evaluateMessageType(type));
+    }
+
+    private static String extractType(final String jsonString) {
+        final String stripped = jsonString.replaceAll("\\s", "");
+        final int typeFieldIndex = stripped.indexOf(TYPE_FIELD);
+        if (typeFieldIndex < 0) {
+            return null;
+        }
+        return stripped
+                .substring(typeFieldIndex+TYPE_FIELD.length()+1, stripped.indexOf(",", typeFieldIndex)-1)
+                .trim();
     }
 }
