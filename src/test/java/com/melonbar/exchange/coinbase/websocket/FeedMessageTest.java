@@ -27,11 +27,16 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 import java.security.SecureRandom;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 public class FeedMessageTest {
 
     private SecureRandom random;
+
+    private final int epochs = 10;
+    private final int threads = 10;
 
     @BeforeTest
     public void init() {
@@ -40,7 +45,6 @@ public class FeedMessageTest {
 
     @Test(dataProvider = "feedMessageTypeDataProvider")
     public <T extends FeedMessage> void testFeedMessageTypeIsNonLossy(final Class<T> feedMessageType) {
-        final int epochs = 10;
         T feedMessage = null;
 
         // perform multiple epochs to try different random configuration of set fields
@@ -78,6 +82,15 @@ public class FeedMessageTest {
             Assert.assertEquals(feedMessage.getText(),
                     JsonMessageMapper.jsonToObject(feedMessage.getText()).get().getText());
         }
+    }
+
+    @Test(dataProvider = "feedMessageTypeDataProvider")
+    public <T extends FeedMessage> void testFeedMessageTypeIsNonLossyAsync(final Class<T> feedMessageType) {
+        final ExecutorService executorService = Executors.newFixedThreadPool(threads);
+        for (int i = 0; i < epochs*10; i++) {
+            executorService.submit(() -> testFeedMessageTypeIsNonLossy(feedMessageType));
+        }
+        executorService.shutdown();
     }
 
     @DataProvider(name = "feedMessageTypeDataProvider")
