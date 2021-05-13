@@ -7,14 +7,16 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Channel {
 
-    @JsonProperty("name") final ChannelType name;
-    @JsonProperty("product_ids") final ProductId[] productIds;
+    @JsonProperty("name") private ChannelType name;
+    @JsonProperty("product_ids") private ProductId[] productIds;
 
     public enum ChannelType {
         HEARTBEAT, STATUS, TICKER, LEVEL2, USER, MATCHES, FULL;

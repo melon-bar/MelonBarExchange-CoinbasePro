@@ -64,8 +64,10 @@ public class JsonMessageMapper {
         if (typeFieldIndex < 0) {
             return null;
         }
+        // if there exists only 1 json field, suffix will be close bracket instead of comma
+        final int endIndex = stripped.indexOf(stripped.indexOf(',') > 0 ? "," : "}", typeFieldIndex)-1;
         return stripped
-                .substring(typeFieldIndex+TYPE_FIELD.length()+1, stripped.indexOf(",", typeFieldIndex)-1)
+                .substring(typeFieldIndex+TYPE_FIELD.length()+1, endIndex)
                 .trim();
     }
 }
