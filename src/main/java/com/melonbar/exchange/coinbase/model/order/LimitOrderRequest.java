@@ -18,7 +18,7 @@ import java.util.UUID;
 public class LimitOrderRequest extends BaseRequest {
 
     @BodyField(key = "side", required = true)
-    private final OrderSide orderSide;
+    private final OrderSide side;
 
     @BodyField(key = "product_id", required = true)
     private final ProductId productId;
@@ -27,10 +27,10 @@ public class LimitOrderRequest extends BaseRequest {
     private final BigDecimal price;
 
     @BodyField(key = "size", required = true)
-    private final BigDecimal orderSize;
+    private final BigDecimal size;
 
     @BodyField(key = "type", required = true)
-    private final OrderType orderType = OrderType.LIMIT;
+    private final OrderType type = OrderType.LIMIT;
 
     @BodyField(key = "client_oid")
     private final UUID orderId;

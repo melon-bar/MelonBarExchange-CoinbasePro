@@ -48,7 +48,7 @@ public final class RandomValueProvider {
         }
         if (type == L2OrderTuple.class) {
             return L2OrderTuple.builder()
-                    .orderSide(RANDOM.nextBoolean() ? randomEnum(OrderSide.class) : null)
+                    .side(RANDOM.nextBoolean() ? randomEnum(OrderSide.class) : null)
                     .price((BigDecimal)random(BigDecimal.class))
                     .size((BigDecimal)random(BigDecimal.class))
                     .build();

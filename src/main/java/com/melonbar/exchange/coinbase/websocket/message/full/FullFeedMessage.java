@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public abstract class FullFeedMessage extends FeedMessage {
 
-    @JsonProperty("side") private OrderSide orderSide;
+    @JsonProperty("side") private OrderSide side;
     @JsonProperty("order_id") private String orderId;
     @JsonProperty("size") private BigDecimal orderSize;
     @JsonProperty("price") private BigDecimal price;

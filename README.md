@@ -26,19 +26,33 @@ final CoinbaseProClient coinbaseProClient = new CoinbaseProClientImpl(accountsAp
 ```java
 // market order to buy 0.01 ETH using USD.
 final MarketOrderRequest marketOrderRequest = MarketOrderRequest.builder()
-                .orderSide(OrderSide.BUY)
-                .product(Product.ETH_USD)
+                .side(OrderSide.BUY)
                 .size(new BigDecimal("0.01"))
+                .productId(Product.ETH_USD)
                 .build();
 final Response response = coinbaseProClient.placeMarketOrder(marketOrderRequest);
 ```
 
 #### Limit order:
 ```java
-// TODO
+// limit order to sell 0.01 ETH in exchange for USD.
+final LimitOrderRequest limitOrderRequest = LimitOrderRequest.builder()
+        .side(OrderSide.SELL)
+        .size(new BigDecimal("0.01"))
+        .productId(ProductId.ETH_USD)
+        .build();
+final Response response = coinbaseProClient.placeMarketOrder(marketOrderRequest);
 ```
 
 ---------------------------------
+## Features:
+
+```
+TODO
+```
+
+---------------------------------
+
 ## Current structure:
 
 ### 1. API Contract _(Request Level)_ 

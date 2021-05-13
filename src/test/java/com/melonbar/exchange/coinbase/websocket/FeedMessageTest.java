@@ -63,10 +63,9 @@ public class FeedMessageTest {
                     continue;
                 }
 
-                field.setAccessible(true);
-
                 // set fields at random
                 if (chance(0.3f)) {
+                    field.setAccessible(true);
                     try {
                         field.set(feedMessage, RandomValueProvider.random(field.getType()));
                     } catch (IllegalAccessException illegalAccessException) {

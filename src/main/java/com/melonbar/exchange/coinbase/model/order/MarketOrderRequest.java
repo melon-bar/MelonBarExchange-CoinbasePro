@@ -16,13 +16,13 @@ import java.util.UUID;
 public class MarketOrderRequest extends BaseRequest {
 
     @BodyField(key = "side", required = true)
-    private final OrderSide orderSide;
+    private final OrderSide side;
 
     @BodyField(key = "product_id", required = true)
     private final ProductId productId;
 
     @BodyField(key = "type", required = true)
-    private final OrderType orderType = OrderType.MARKET;
+    private final OrderType type = OrderType.MARKET;
 
     @BodyField(key = "size")
     private final BigDecimal size;
