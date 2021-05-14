@@ -18,6 +18,10 @@ public class Channel {
     @JsonProperty("name") private ChannelType name;
     @JsonProperty("product_ids") private ProductId[] productIds;
 
+    public static Channel of(final ChannelType channelType, final ProductId ... productIds) {
+        return new Channel(channelType, productIds);
+    }
+
     public enum ChannelType {
         HEARTBEAT, STATUS, TICKER, LEVEL2, USER, MATCHES, FULL;
 
