@@ -13,6 +13,7 @@ public record ProductId(Currency.Unit left, Currency.Unit right) {
 
     public static final String DELIMITER = "-";
     public static final ProductId ETH_USD = new ProductId(Currency.Unit.ETH, Currency.Unit.USD);
+    public static final ProductId BTC_USD = new ProductId(Currency.Unit.BTC, Currency.Unit.USD);
 
     public static ProductId of(final String left, final String right) {
         return new ProductId(

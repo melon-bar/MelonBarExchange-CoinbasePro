@@ -12,6 +12,6 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class SubscribeMessage extends FeedMessage {
 
-    @JsonProperty("product_ids") private ProductId[] productIds;
-    @JsonProperty("channels") private Channel[] channels;
+    @JsonProperty("product_ids") private ProductId[] productIds = new ProductId[] {};
+    @JsonProperty("channels") private Channel[] channels = new Channel[] {};
 }

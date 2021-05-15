@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.websocket.MessageTypes;
 import com.melonbar.exchange.coinbase.websocket.message.deserializer.JsonMessageMapper;
@@ -20,6 +21,17 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
+/**
+ * Parent POJO abstract class for json messages to be received and sent via websocket feed. Intended for the
+ * Coinbase Pro websocket feed.
+ *
+ * <p> All subtypes when json serialized will automatically have field <code>type</code>, which is determined by
+ * field <code>name</code> in the corresponding {@link JsonSubTypes.Type} annotation. All null fields are omitted
+ * when marshalled.
+ *
+ * @see Message For base definition
+ * @see JsonMessageMapper For json marshalling/unmarshalling logic
+ */
 @Slf4j
 @SuperBuilder
 @NoArgsConstructor
@@ -52,17 +64,44 @@ public abstract class FeedMessage implements Message {
     @JsonProperty("time") private DateTime time;
     @JsonProperty("product_id") private ProductId productId;
 
+    /**
+     * Marshals instance using {@link JsonMessageMapper}.
+     *
+     * @return Json string version of instance
+     */
     @JsonIgnore
     @Override
     public String getText() {
         return JsonMessageMapper.objectToJson(this);
     }
 
+    /**
+     * Override <code>toString</code> to return json representation.
+     *
+     * @return Json representation
+     */
     @Override
     public String toString() {
         return getText();
     }
 
+    /**
+     * Use json marshalling method to provide json value when extensions of {@link FeedMessage} are being
+     * serialized.
+     *
+     * @return Json representation
+     */
+    @JsonValue
+    public String toJson() {
+        return getText();
+    }
+
+    /**
+     * Equality operator based on type check and json message content.
+     *
+     * @param other Other object
+     * @return True if input is a {@link FeedMessage} and has the same deserialized output
+     */
     @Override
     public boolean equals(final Object other) {
         return (other instanceof FeedMessage jsonFeedMessage) && getText().equals(jsonFeedMessage.getText());

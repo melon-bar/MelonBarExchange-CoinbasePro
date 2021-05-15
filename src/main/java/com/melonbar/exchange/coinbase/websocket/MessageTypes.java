@@ -15,6 +15,9 @@ import com.melonbar.exchange.coinbase.websocket.message.full.MatchedOrderMessage
 import com.melonbar.exchange.coinbase.websocket.message.full.OpenedOrderMessage;
 import com.melonbar.exchange.coinbase.websocket.message.full.ReceivedOrderMessage;
 
+/**
+ * Contains definitions for all Coinbase Pro websocket feed message types.
+ */
 public final class MessageTypes {
 
     public static final String SUBSCRIBE = "subscribe";
@@ -33,6 +36,14 @@ public final class MessageTypes {
     public static final String CHANGED_ORDER = "change";
     public static final String ACTIVATED_ORDER = "activate";
 
+    /**
+     * Evaluates the {@link Class} for the corresponding {@link FeedMessage} subtype based on the <code>type</code>
+     * field from an inbound message. Used for dynamic type detection for unmarshalling.
+     *
+     * @param type Type field
+     * @return Corresponding extension of {@link FeedMessage}
+     * @throws IllegalStateException Provided a <code>type</code> that does not map to any {@link FeedMessage}.
+     */
     public static Class<? extends FeedMessage> evaluateMessageType(final String type) {
         return switch (type) {
             case SUBSCRIBE -> SubscribeMessage.class;

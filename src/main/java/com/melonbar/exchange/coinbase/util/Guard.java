@@ -1,6 +1,7 @@
 package com.melonbar.exchange.coinbase.util;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -22,6 +23,19 @@ public final class Guard {
                 Objects.requireNonNull(objects[i], Format.format("Null object found in {} at i={}",
                         Arrays.toString(objects), i));
             }
+        }
+    }
+
+    /**
+     * Basic shorthand guard to enforce non-empty instances of {@link Collection}.
+     *
+     * @param collection {@link Collection}
+     * @param <T> Implementation of {@link Collection}
+     */
+    public static <T extends Collection<?>> void notEmpty(final T collection) {
+        if (collection == null || collection.size() < 1) {
+            throw new IllegalStateException(Format.format("Input collection [{}] is empty!",
+                    collection == null ? null : collection.getClass().getName()));
         }
     }
 }
