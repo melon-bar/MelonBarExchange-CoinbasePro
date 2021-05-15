@@ -33,7 +33,8 @@ public final class JsonUtils {
         // determine beginning and end indices for value extraction
         int startIndex = typeFieldIndex + quotedKey.length();
         int endIndex = stripped.indexOf(
-                stripped.indexOf(',') > 0 ? "," : "}", typeFieldIndex);
+                // if no comma present after start index, then assume key is last element
+                stripped.indexOf(',', startIndex) > 0 ? "," : "}", typeFieldIndex);
         // determine if quotes must be stripped
         if (stripped.charAt(startIndex) == '\"') {
             startIndex += 1;
