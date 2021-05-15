@@ -5,6 +5,11 @@ package com.melonbar.exchange.coinbase.util;
  */
 public final class JsonUtils {
 
+    private static final char QUOTE = '\"';
+    private static final char SEMICOLON = ':';
+    private static final char COMMA = ',';
+    private static final char CLOSE_BRACKET = '}';
+
     /**
      * Extracts the string value from the input <code>jsonString</code> using input <code>key</code> as
      * the json key. The input key should be the raw string value, and not contain any extraneous quotations or
@@ -25,7 +30,7 @@ public final class JsonUtils {
     public static String extractField(final String key, final String jsonString) {
         Guard.nonNull(key, jsonString);
         final String stripped = jsonString.replaceAll("\\s", "");
-        final String quotedKey = '\"' + key + '\"' + ':';
+        final String quotedKey = QUOTE + key + QUOTE + SEMICOLON;
         final int typeFieldIndex = stripped.indexOf(quotedKey);
         if (typeFieldIndex < 0) {
             return null;
@@ -34,9 +39,9 @@ public final class JsonUtils {
         int startIndex = typeFieldIndex + quotedKey.length();
         int endIndex = stripped.indexOf(
                 // if no comma present after start index, then assume key is last element
-                stripped.indexOf(',', startIndex) > 0 ? "," : "}", typeFieldIndex);
+                stripped.indexOf(COMMA, startIndex) > 0 ? COMMA : CLOSE_BRACKET, typeFieldIndex);
         // determine if quotes must be stripped
-        if (stripped.charAt(startIndex) == '\"') {
+        if (stripped.charAt(startIndex) == QUOTE) {
             startIndex += 1;
             endIndex -= 1;
         }
