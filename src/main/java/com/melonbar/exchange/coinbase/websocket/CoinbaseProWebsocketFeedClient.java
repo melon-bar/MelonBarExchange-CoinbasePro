@@ -4,9 +4,10 @@ import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.util.AppConfig;
 import com.melonbar.exchange.coinbase.websocket.message.SubscribeMessage;
 import com.melonbar.exchange.coinbase.websocket.message.model.Channel;
-import com.melonbar.exchange.coinbase.websocket.processing.StringMessageHandler;
+import com.melonbar.exchange.coinbase.websocket.processing.AggregatedMessageHandler;
 
 import javax.websocket.ClientEndpoint;
+import javax.websocket.MessageHandler;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,12 +38,13 @@ public class CoinbaseProWebsocketFeedClient extends ReactiveWebsocketFeedClient 
     }
 
     /**
-     * Add {@link StringMessageHandler}s to the member {@lnk AggregatedMessageHandler}.
+     * Add {@link MessageHandler.Whole}s to the member {@link AggregatedMessageHandler}.
      *
-     * @param messageHandlers {@link StringMessageHandler Handler(s)} to add
+     * @param messageHandlers {@link MessageHandler.Whole Handler(s)} to add
      */
-    public void addMessageHandlers(final StringMessageHandler ... messageHandlers) {
-        for (final StringMessageHandler messageHandler : messageHandlers) {
+    @SafeVarargs
+    public final void addMessageHandlers(final MessageHandler.Whole<String>... messageHandlers) {
+        for (final MessageHandler.Whole<String> messageHandler : messageHandlers) {
             getAggregatedMessageHandler().addMessageHandler(messageHandler);
         }
     }
@@ -66,12 +68,13 @@ public class CoinbaseProWebsocketFeedClient extends ReactiveWebsocketFeedClient 
         }
 
         /**
-         * Wither for {@link StringMessageHandler}s.
+         * Wither for {@link MessageHandler.Whole}s.
          *
-         * @param messageHandlers {@link StringMessageHandler}s
+         * @param messageHandlers {@link MessageHandler.Whole}s
          * @return {@link Builder}
          */
-        public Builder withMessageHandlers(final StringMessageHandler ... messageHandlers) {
+        @SafeVarargs
+        public final Builder withMessageHandlers(final MessageHandler.Whole<String>... messageHandlers) {
             coinbaseProWebsocketFeedClient.addMessageHandlers(messageHandlers);
             return this;
         }
