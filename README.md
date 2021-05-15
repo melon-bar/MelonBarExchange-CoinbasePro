@@ -8,28 +8,23 @@
 
 #### Initialize Coinbase Pro client:
 ```java
-// barebone requirements for making Coinbase Pro API requests
-final Authentication authentication = new CoinbaseProAuthentication(API_KEY, API_PASSWORD, API_SECRET);
-final HttpClient httpClient = new HttpClientImpl(authentication, java.net.http.HttpClient.newHttpClient());
-final Enricher requestEnricher = new RequestEnricher();
+// initialized via factory method
+final CoinbaseProClient coinbaseProClient = CoinbaseProClientFactory.createClient(
+        API_KEY, API_PASSWORD, API_SECRET_KEY);
 
-// API implementations
-final AccountsApi accountsApi = new AccountsApiImpl(httpClient, requestEnricher);
-final OrdersApi ordersApi = new OrdersApiImpl(httpClient, requestEnricher);
+// ready for use!
 ...
-
-// init Coinbase Pro client
-final CoinbaseProClient coinbaseProClient = new CoinbaseProClientImpl(accountsApi, ordersApi, ...);
+coinbaseProClient.placeLimitOrder(...);
 ```
 
 #### Market order:
 ```java
 // market order to buy 0.01 ETH using USD.
 final MarketOrderRequest marketOrderRequest = MarketOrderRequest.builder()
-                .side(OrderSide.BUY)
-                .size(new BigDecimal("0.01"))
-                .productId(Product.ETH_USD)
-                .build();
+        .side(OrderSide.BUY)
+        .size(new BigDecimal("0.01"))
+        .productId(Product.ETH_USD)
+        .build();
 final Response response = coinbaseProClient.placeMarketOrder(marketOrderRequest);
 ```
 
