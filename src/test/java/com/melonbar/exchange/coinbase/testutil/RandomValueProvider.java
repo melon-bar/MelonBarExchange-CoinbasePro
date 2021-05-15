@@ -4,6 +4,7 @@ import com.melonbar.exchange.coinbase.model.core.Currency;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderSide;
 import com.melonbar.exchange.coinbase.websocket.message.model.Channel;
+import com.melonbar.exchange.coinbase.websocket.message.model.ChannelType;
 import com.melonbar.exchange.coinbase.websocket.message.model.L2OrderTuple;
 import org.joda.time.DateTime;
 
@@ -55,7 +56,7 @@ public final class RandomValueProvider {
         }
         if (type == Channel.class) {
             return new Channel(
-                    randomEnum(Channel.ChannelType.class), randomArray(ProductId.class, 5));
+                    randomEnum(ChannelType.class), randomArray(ProductId.class, 5));
         }
         if (type.isArray()) {
             return randomArray(type.getComponentType(), 10);

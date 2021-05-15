@@ -1,32 +1,45 @@
 package com.melonbar.exchange.coinbase.websocket.processing;
 
-import com.melonbar.exchange.coinbase.util.Guard;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.MessageHandler;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Handles aggregations of {@link MessageHandler.Whole}. Only invoked on the retrieval of whole messages.
+ * A single instance is thread-safe, and may be used across multiple threads for messaging handling.
+ *
+ * @param <T> Message type to be processed
+ */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AggregatedMessageHandler<T> implements MessageHandler.Whole<T> {
 
-    private final LinkedList<MessageHandler.Whole<T>> messageHandlers = new LinkedList<>();
+    /**
+     * Basic container for multiple message handlers. Uses {@link ArrayList} to take advantage of spacial locality
+     * as this container will be iterated through frequently.
+     */
+    private final List<Whole<T>> messageHandlers = new ArrayList<>(10);
 
-    public static <T> AggregatedMessageHandler<T> init() {
+    /**
+     * Creates an empty {@link AggregatedMessageHandler} instance.
+     *
+     * @param <T> Message type to be processed
+     * @return {@link AggregatedMessageHandler}
+     */
+    public static <T> AggregatedMessageHandler<T> create() {
         return new AggregatedMessageHandler<>();
     }
 
-    @SafeVarargs
-    public static <T> AggregatedMessageHandler<T> aggregate(final MessageHandler.Whole<T> ... messageHandlers) {
-        Guard.nonNull(messageHandlers);
-        final AggregatedMessageHandler<T> aggregatedMessageHandler = init();
-        Arrays.stream(messageHandlers).forEach(aggregatedMessageHandler::addMessageHandler);
-        return aggregatedMessageHandler;
-    }
-
+    /**
+     * Invokes all {@link MessageHandler.Whole#onMessage(T message)} aggregated by this instance in a thread-safe
+     * manner. Invocation occurs following the same order they were added in.
+     *
+     * @param message Inbound message
+     */
     @Override
     public void onMessage(final T message) {
         synchronized (messageHandlers) {
@@ -36,6 +49,12 @@ public class AggregatedMessageHandler<T> implements MessageHandler.Whole<T> {
         }
     }
 
+    /**
+     * Registers a new {@link MessageHandler.Whole}. The input handler is added to the end of the list. The order by
+     * which handlers are added is conserved by the holding data structure.
+     *
+     * @param messageHandler {@link MessageHandler.Whole} to be added
+     */
     public void addMessageHandler(final MessageHandler.Whole<T> messageHandler) {
         if (messageHandler instanceof AggregatedMessageHandler) {
             log.warn("Adding handler [{}] to itself will cause recursive message handler invocations!",
@@ -45,6 +64,4 @@ public class AggregatedMessageHandler<T> implements MessageHandler.Whole<T> {
             messageHandlers.add(messageHandler);
         }
     }
-
-
 }
