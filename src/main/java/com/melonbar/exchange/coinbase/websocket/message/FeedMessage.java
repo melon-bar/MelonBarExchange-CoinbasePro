@@ -37,7 +37,7 @@ import org.joda.time.DateTime;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = FeedMessage.TYPE_FIELD)
 @JsonSubTypes({
         // request message types
         @JsonSubTypes.Type(value = SubscribeMessage.class,      name = MessageTypes.SUBSCRIBE),
@@ -59,6 +59,8 @@ import org.joda.time.DateTime;
         @JsonSubTypes.Type(value = ActivatedOrderMessage.class, name = MessageTypes.ACTIVATED_ORDER),
 })
 public abstract class FeedMessage implements Message {
+
+    public static final String TYPE_FIELD = "type";
 
     @JsonProperty("sequence") private Long sequence;
     @JsonProperty("time") private DateTime time;
@@ -82,17 +84,6 @@ public abstract class FeedMessage implements Message {
      */
     @Override
     public String toString() {
-        return getText();
-    }
-
-    /**
-     * Use json marshalling method to provide json value when extensions of {@link FeedMessage} are being
-     * serialized.
-     *
-     * @return Json representation
-     */
-    @JsonValue
-    public String toJson() {
         return getText();
     }
 

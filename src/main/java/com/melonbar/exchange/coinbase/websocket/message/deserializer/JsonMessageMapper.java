@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
+import com.melonbar.exchange.coinbase.util.JsonUtils;
 import com.melonbar.exchange.coinbase.websocket.MessageTypes;
 import com.melonbar.exchange.coinbase.websocket.message.FeedMessage;
 import com.melonbar.exchange.coinbase.websocket.message.model.L2OrderTuple;
@@ -35,7 +36,6 @@ import java.util.Optional;
 public class JsonMessageMapper {
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private final static String TYPE_FIELD = "\"type\":";
 
     static {
         final SimpleModule websocketFeedMessageModule = new SimpleModule();
@@ -95,22 +95,9 @@ public class JsonMessageMapper {
      * @see MessageTypes
      */
     public static Optional<? extends FeedMessage> jsonToObject(final String jsonString) {
-        final String type = extractType(jsonString);
+        final String type = JsonUtils.extractField(FeedMessage.TYPE_FIELD, jsonString);
         return StringUtils.isEmpty(type)
                 ? Optional.empty()
                 : jsonToObject(jsonString, MessageTypes.evaluateMessageType(type));
-    }
-
-    private static String extractType(final String jsonString) {
-        final String stripped = jsonString.replaceAll("\\s", "");
-        final int typeFieldIndex = stripped.indexOf(TYPE_FIELD);
-        if (typeFieldIndex < 0) {
-            return null;
-        }
-        // if there exists only 1 json field, suffix will be close bracket instead of comma
-        final int endIndex = stripped.indexOf(stripped.indexOf(',') > 0 ? "," : "}", typeFieldIndex)-1;
-        return stripped
-                .substring(typeFieldIndex+TYPE_FIELD.length()+1, endIndex)
-                .trim();
     }
 }
