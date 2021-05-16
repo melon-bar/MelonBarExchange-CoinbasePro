@@ -29,6 +29,9 @@ import java.util.Optional;
 @Slf4j
 public class RequestEnricher implements Enricher {
 
+    /** Static {@link ObjectMapper} for json marshalling. */
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     /**
      * Suffix for deduping JSON keys.
      */
@@ -153,8 +156,7 @@ public class RequestEnricher implements Enricher {
             return "";
         }
 
-        final ObjectMapper mapper = new ObjectMapper();
-        final ObjectNode root = mapper.createObjectNode();
+        final ObjectNode root = OBJECT_MAPPER.createObjectNode();
 
         // process each field
         for (final Field field : fields) {
@@ -191,7 +193,7 @@ public class RequestEnricher implements Enricher {
         }
 
         // convert request body to string format with deduped keys (if necessary)
-        final String requestBody = dedupeKeys(mapper.writeValueAsString(root).trim());
+        final String requestBody = dedupeKeys(OBJECT_MAPPER.writer().writeValueAsString(root).trim());
         log.info("Generated body for request type {}: [{}]", request.getClass().getSimpleName(), requestBody);
 
         return requestBody;
