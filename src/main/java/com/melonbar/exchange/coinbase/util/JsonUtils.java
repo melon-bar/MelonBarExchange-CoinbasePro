@@ -31,15 +31,15 @@ public final class JsonUtils {
         Guard.nonNull(key, jsonString);
         final String stripped = jsonString.replaceAll("\\s", "");
         final String quotedKey = QUOTE + key + QUOTE + SEMICOLON;
-        final int typeFieldIndex = stripped.indexOf(quotedKey);
-        if (typeFieldIndex < 0) {
+        final int keyIndex = stripped.indexOf(quotedKey);
+        if (keyIndex < 0) {
             return null;
         }
         // determine beginning and end indices for value extraction
-        int startIndex = typeFieldIndex + quotedKey.length();
+        int startIndex = keyIndex + quotedKey.length();
         int endIndex = stripped.indexOf(
                 // if no comma present after start index, then assume key is last element
-                stripped.indexOf(COMMA, startIndex) > 0 ? COMMA : CLOSE_BRACKET, typeFieldIndex);
+                stripped.indexOf(COMMA, startIndex) > 0 ? COMMA : CLOSE_BRACKET, keyIndex);
         // determine if quotes must be stripped
         if (stripped.charAt(startIndex) == QUOTE) {
             startIndex += 1;
@@ -48,5 +48,20 @@ public final class JsonUtils {
         return stripped
                 .substring(startIndex, endIndex)
                 .trim();
+    }
+
+    /**
+     * Wrapped call to {@link #extractField(String key, String jsonString)} but provides a fallback value when the
+     * result is null.
+     *
+     * @param key Key for value to be extracted
+     * @param jsonString Json string
+     * @param defaultValue Fallback value
+     * @return Json value if present, otherwise <code>defaultValue</code>
+     */
+    public static String extractField(final String key, final String jsonString,
+                                      final String defaultValue) {
+        final String value = extractField(key, jsonString);
+        return value == null ? defaultValue : value;
     }
 }
