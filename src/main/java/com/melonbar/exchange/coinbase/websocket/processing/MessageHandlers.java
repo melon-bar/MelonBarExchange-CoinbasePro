@@ -1,9 +1,11 @@
 package com.melonbar.exchange.coinbase.websocket.processing;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melonbar.exchange.coinbase.util.Guard;
 import com.melonbar.exchange.coinbase.util.JsonUtils;
 import com.melonbar.exchange.coinbase.websocket.message.FeedMessage;
 import com.melonbar.exchange.coinbase.websocket.processing.predicated.PredicatedMessageHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.MessageHandler;
 import java.math.BigDecimal;
@@ -14,9 +16,25 @@ import java.util.function.Predicate;
 /**
  * Catalog of common helper functions and {@link MessageHandler} generators for general use cases.
  */
+@Slf4j
 public final class MessageHandlers {
 
     private static final String TICKER_PRICE = "price";
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    /**
+     * Pretty prints input message. Mostly for debugging purposes.
+     *
+     * @param message Inbound message
+     */
+    public static void prettyPrint(final String message) {
+        try {
+            log.info("{}", OBJECT_MAPPER.reader()
+                    .readTree(message).toPrettyString());
+        } catch (Exception exception) {
+            log.info("Could not pretty-print: {}", message);
+        }
+    }
 
     /**
      * Function that accepts ticker json message and extracts the current price.

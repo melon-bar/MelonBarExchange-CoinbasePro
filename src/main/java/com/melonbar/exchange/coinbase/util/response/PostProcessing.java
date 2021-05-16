@@ -110,9 +110,8 @@ public final class PostProcessing {
     private static JsonNode marshalJson(final String jsonString) {
         Guard.nonNull(jsonString);
         try {
-            final ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readTree(
-                    objectMapper.getFactory().createParser(jsonString));
+            return OBJECT_MAPPER.reader()
+                    .readTree(OBJECT_MAPPER.getFactory().createParser(jsonString));
         } catch (IOException ioException) {
             log.error("Exception [{}] thrown while attempting to parse content as json: [{}]",
                     ioException.getClass().getName(), jsonString, ioException);
