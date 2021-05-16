@@ -5,6 +5,7 @@ import com.melonbar.exchange.coinbase.util.AppConfig;
 import com.melonbar.exchange.coinbase.websocket.message.SubscribeMessage;
 import com.melonbar.exchange.coinbase.websocket.message.model.Channel;
 import com.melonbar.exchange.coinbase.websocket.processing.AggregatedMessageHandler;
+import com.melonbar.exchange.coinbase.websocket.processing.tracking.Tracker;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.MessageHandler;
@@ -51,6 +52,17 @@ public class CoinbaseProWebsocketFeedClient extends ReactiveWebsocketFeedClient 
     }
 
     /**
+     * Register the input {@link Tracker}. The new {@link MessageHandler.Whole} is instantiated with
+     * {@link Tracker#update}.
+     *
+     * @param tracker Tracker to register
+     * @param <T> Implementation of {@link Tracker}
+     */
+    public <T extends Tracker<String>> void addTracker(final T tracker) {
+        addMessageHandler(tracker::update);
+    }
+
+    /**
      * Internal static builder class for convenient and controlled initialization of
      * {@link CoinbaseProWebsocketFeedClient}.
      */
@@ -77,6 +89,19 @@ public class CoinbaseProWebsocketFeedClient extends ReactiveWebsocketFeedClient 
         @SafeVarargs
         public final Builder withMessageHandlers(final MessageHandler.Whole<String>... messageHandlers) {
             coinbaseProWebsocketFeedClient.addMessageHandlers(messageHandlers);
+            return this;
+        }
+
+        /**
+         * Wither for registering {@link Tracker}. Registers {@link Tracker#update} as a {@link MessageHandler.Whole}.
+         * The same may be accomplished adding {@link Tracker#update} using {@link #withMessageHandlers}.
+         *
+         * @param trackers {@link Tracker}s
+         * @return {@link Builder}
+         */
+        @SafeVarargs
+        public final Builder withTrackers(final Tracker<String> ... trackers) {
+            Arrays.stream(trackers).forEach(coinbaseProWebsocketFeedClient::addTracker);
             return this;
         }
 
