@@ -25,8 +25,7 @@ final PriceTracker priceTracker = new PriceTracker();
 // initialized via builder
 final CoinbaseProWebsocketFeedClient client = CoinbaseProWebsocketFeedClient.builder()
         // pass in pre-initialized trackers
-        .withTrackers(
-                priceTracker)
+        .withTrackers(priceTracker)
         // pass lambdas accepting String input message (more on this later)
         .withMessageHandlers(
                 (message) -> log.info("got message: {}"))
