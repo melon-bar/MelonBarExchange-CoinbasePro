@@ -51,13 +51,13 @@ public final class MessageHandlers {
      * Factory method for creating {@link PredicatedMessageHandler} provided an input {@link Predicate} on
      * {@link T} and the base {@link MessageHandler.Whole}.
      *
-     * @param messageHandler Base handler whose {@link MessageHandler.Whole#onMessage} will be invoked
-     * @param predicate {@link Predicate} guarding invocation
      * @param <T> Message type
+     * @param predicate {@link Predicate} guarding invocation
+     * @param messageHandler Base handler whose {@link MessageHandler.Whole#onMessage} will be invoked
      * @return {@link PredicatedMessageHandler}
      */
-    public static <T> PredicatedMessageHandler<T> predicated(final MessageHandler.Whole<T> messageHandler,
-                                                             final Predicate<T> predicate) {
+    public static <T> PredicatedMessageHandler<T> predicated(final Predicate<T> predicate,
+                                                             final MessageHandler.Whole<T> messageHandler) {
         return new PredicatedMessageHandler<T>(predicate, messageHandler);
     }
 
@@ -78,7 +78,7 @@ public final class MessageHandlers {
         Arrays.stream(messageHandlers)
                 .forEach(aggregate::addMessageHandler);
         // predicate aggregation of input message handlers with type field check
-        return predicated(aggregate,
-                (message) -> type.equals(JsonUtils.extractField(FeedMessage.TYPE_FIELD, message)));
+        return predicated((message) -> type.equals(JsonUtils.extractField(FeedMessage.TYPE_FIELD, message)), aggregate
+        );
     }
 }
