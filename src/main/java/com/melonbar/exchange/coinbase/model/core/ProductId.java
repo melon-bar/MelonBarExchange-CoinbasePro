@@ -17,13 +17,13 @@ public record ProductId(Currency.Unit left, Currency.Unit right) {
 
     public static ProductId of(final String left, final String right) {
         return new ProductId(
-                Currency.Unit.valueOf(left.toUpperCase()),
-                Currency.Unit.valueOf(right.toUpperCase()));
+                Currency.Unit.unitOf(left),
+                Currency.Unit.unitOf(right));
     }
 
     @Override
     public String toString() {
-        return left.name() + DELIMITER + right.name();
+        return left.getSymbol() + DELIMITER + right.getSymbol();
     }
 
     @JsonValue

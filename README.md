@@ -6,7 +6,7 @@
 ---------------------------------
 ## Example usage:
 
-#### Initialize Coinbase Pro client:
+#### Initialize Coinbase Pro HTTPS client:
 ```java
 // initialized via factory method
 final CoinbaseProClient coinbaseProClient = CoinbaseProClientFactory.createClient(
@@ -15,6 +15,33 @@ final CoinbaseProClient coinbaseProClient = CoinbaseProClientFactory.createClien
 // ready for use!
 ...
 coinbaseProClient.placeLimitOrder(...);
+```
+
+#### Initialize Websocket Feed client:
+```java
+// price tracker for live price updates
+final PriceTracker priceTracker = new PriceTracker();
+
+// initialized via builder
+final CoinbaseProWebsocketFeedClient client = CoinbaseProWebsocketFeedClient.builder()
+        // pass in pre-initialized trackers
+        .withTrackers(
+                priceTracker)
+        // pass lambdas accepting String input message (more on this later)
+        .withMessageHandlers(
+                (message) -> log.info("got message: {}"))
+        // specify channels to subscribe to
+        .withChannels(
+                Channel.of(ChannelType.TICKER),
+                Channel.of(ChannelType.STATUS))
+        // specify products to listen for on each channel 
+        .withProducts(
+                ProductId.ETH_USD,
+                ProductId.BTC_USD)
+        // default text buffer size is 1024 * 8 bytes 
+        .withTextBufferSize(1024 * 8)
+        // build
+        .build();
 ```
 
 #### Market order:
@@ -37,6 +64,20 @@ final LimitOrderRequest limitOrderRequest = LimitOrderRequest.builder()
         .productId(ProductId.ETH_USD)
         .build();
 final Response response = coinbaseProClient.placeMarketOrder(marketOrderRequest);
+```
+
+#### (Awful) Trading strategy example:
+```java
+// see initialized websocket feed client and REST client above
+...
+new Thread(() ->{
+    while (true) {
+        // buy 100 ETH whenever 1 ETH <= 2 USD
+        if (priceTracker.getPrice(ProductId.ETH_USD).compareTo(BigDecimal.TWO) <= 0) {
+            coinbaseProClient.placeMarketOrder()
+        }
+    }
+}).start();
 ```
 
 ---------------------------------

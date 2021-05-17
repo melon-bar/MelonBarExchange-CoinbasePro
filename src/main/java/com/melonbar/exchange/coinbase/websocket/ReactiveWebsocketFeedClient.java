@@ -5,6 +5,7 @@ import com.melonbar.exchange.coinbase.websocket.processing.AggregatedMessageHand
 import com.melonbar.exchange.coinbase.websocket.processing.StringMessageHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.CloseReason;
@@ -14,6 +15,7 @@ import javax.websocket.MessageHandler;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 
@@ -34,16 +36,15 @@ public abstract class ReactiveWebsocketFeedClient implements WebsocketFeedClient
     private final AggregatedMessageHandler<String> aggregatedMessageHandler;
     private Session session;
 
+    @Setter(AccessLevel.PROTECTED)
+    private int bufferSize;
+
     /**
-     * Protected constructor that initializes the websocket feed connection using the provided endpoint.
-     * Initializes {@link AggregatedMessageHandler}, which is registered once a {@link Session} is created
-     * in {@link #onOpenConnection(Session)}.
-     *
-     * @param endpoint Websocket feed endpoint
+     * Protected constructor that initializes {@link AggregatedMessageHandler}, which is registered once a
+     * {@link Session} is created in {@link #onOpenConnection(Session)}.
      */
-    protected ReactiveWebsocketFeedClient(final String endpoint) {
+    protected ReactiveWebsocketFeedClient() {
         aggregatedMessageHandler = AggregatedMessageHandler.create();
-        open(endpoint);
     }
 
     /**
@@ -82,8 +83,10 @@ public abstract class ReactiveWebsocketFeedClient implements WebsocketFeedClient
     @Override
     public void open(final String endpoint) {
         try {
-            ContainerProvider.getWebSocketContainer()
-                    .connectToServer(this, URI.create(endpoint));
+            final WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
+            webSocketContainer.setDefaultMaxTextMessageBufferSize(
+                    bufferSize > 0 ? bufferSize : webSocketContainer.getDefaultMaxTextMessageBufferSize());
+            webSocketContainer.connectToServer(this, URI.create(endpoint));
         } catch (DeploymentException | IOException exception) {
             log.error("Got exception {} while initializing session to endpoint [{}].",
                     exception.getClass().getName(), endpoint, exception);
