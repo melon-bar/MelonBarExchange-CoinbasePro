@@ -78,7 +78,8 @@ public final class MessageHandlers {
         Arrays.stream(messageHandlers)
                 .forEach(aggregate::addMessageHandler);
         // predicate aggregation of input message handlers with type field check
-        return predicated((message) -> type.equals(JsonUtils.extractField(FeedMessage.TYPE_FIELD, message)), aggregate
-        );
+        return predicated((message) -> type.equals(
+                    JsonUtils.extractField(FeedMessage.TYPE_FIELD, message)),
+                aggregate);
     }
 }

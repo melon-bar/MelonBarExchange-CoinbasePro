@@ -64,4 +64,54 @@ public final class JsonUtils {
         final String value = extractField(key, jsonString);
         return value == null ? defaultValue : value;
     }
+
+    /**
+     * Returns array of strings containing all extracted fields. The resultant array is the same size
+     * as the number of args for <code>fields</code>. If not all values are present, an exception will
+     * be thrown.
+     *
+     * @param jsonString Json string
+     * @param fields Fields to search for
+     * @return Array of values
+     * @throws IllegalArgumentException When any of the input fields cannot be found
+     */
+    public static String[] extractFields(final String jsonString, final String ... fields) {
+        return extractFields(true, jsonString, fields);
+    }
+
+    /**
+     * Returns array of strings containing extracted fields. If a field could not be found, the corresponding
+     * value in the resultant array will be <code>null</code>.
+     *
+     * @param jsonString Json string
+     * @param fields Fields to search for
+     * @return Array of values, <code>null</code> element for each non-present field
+     */
+    public static String[] extractFieldsUnsafe(final String jsonString, final String ... fields) {
+        return extractFields(false, jsonString, fields);
+    }
+
+    /**
+     * Searches for each field in the json string, and conditionally throws {@link IllegalArgumentException} for
+     * non-present fields.
+     *
+     * @param allOrNothing When true, throws {@link IllegalArgumentException} for non-present fields
+     * @param jsonString Json string
+     * @param fields Fields to search for
+     * @return Array of values
+     * @throws IllegalArgumentException When any of the input fields cannot be found and
+     *  <code>allOrNothing</code> is true
+     */
+    private static String[] extractFields(final boolean allOrNothing, final String jsonString,
+                                          final String ... fields) {
+        final String[] values = new String[fields.length];
+        for (int i = 0; i < values.length; i++) {
+            values[i++] = extractField(fields[i], jsonString);
+            if (allOrNothing && values[i] == null) {
+                throw new IllegalArgumentException(
+                        Format.format("Could not find field [{}] in json [{}]", fields[i], jsonString));
+            }
+        }
+        return values;
+    }
 }
