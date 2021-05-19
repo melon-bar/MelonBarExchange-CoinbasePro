@@ -48,6 +48,19 @@ public final class MessageHandlers {
     }
 
     /**
+     * Creates a new {@link TimedMessageHandler}. Effectively acts as a timed wrapper for other
+     * {@link MessageHandler.Whole} implementations.
+     *
+     * @param messageHandler {@link MessageHandler.Whole} which will be invoked by {@link TimedMessageHandler}
+     * @param delay Delay in milliseconds
+     * @param <T> Message type
+     * @return {@link TimedMessageHandler}
+     */
+    public static <T> TimedMessageHandler<T> timed(final MessageHandler.Whole<T> messageHandler, final long delay) {
+        return new TimedMessageHandler<>(messageHandler, delay);
+    }
+
+    /**
      * Factory method for creating {@link PredicatedMessageHandler} provided an input {@link Predicate} on
      * {@link T} and the base {@link MessageHandler.Whole}.
      *
@@ -71,8 +84,9 @@ public final class MessageHandlers {
      * @param messageHandlers {@link StringMessageHandler}s to aggregate into {@link AggregatedMessageHandler}
      * @return {@link PredicatedMessageHandler}
      */
+    @SafeVarargs
     public static PredicatedMessageHandler<String> byType(final String type,
-                                                          final StringMessageHandler ... messageHandlers) {
+                                                          final MessageHandler.Whole<String> ... messageHandlers) {
         Guard.nonNull(type, messageHandlers);
         final AggregatedMessageHandler<String> aggregate = AggregatedMessageHandler.create();
         Arrays.stream(messageHandlers)
