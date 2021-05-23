@@ -89,17 +89,16 @@ public record HttpClientImpl(Authentication authentication,
      * @return {@link HttpRequest} ready for dispatch
      */
     private HttpRequest generateHttpRequest(final BaseRequest request) {
-        return authentication.sign(
-                    HttpRequest.newBuilder(),
-                    request.getMethod().name(),
-                    request.getRequestPath(),
-                    request.getBody())
+        return authentication
+                .sign(HttpRequest.newBuilder(),
+                        request.getMethod().name(),
+                        request.getRequestPath(),
+                        request.getBody())
                 // apply URI
                 .uri(URI.create(request.getUri()))
                 // apply HTTP method and body
-                .method(
-                    request.getMethod().name(),
-                    HttpRequest.BodyPublishers.ofString(request.getBody()))
+                .method(request.getMethod().name(),
+                        HttpRequest.BodyPublishers.ofString(request.getBody()))
                 .build();
     }
 

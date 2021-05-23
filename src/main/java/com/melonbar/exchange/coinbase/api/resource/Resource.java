@@ -21,7 +21,7 @@ public enum Resource {
      * Accounts API resources.
      * @see <a href=https://docs.pro.coinbase.com/#accounts>https://docs.pro.coinbase.com/#accounts</a>
      */
-    ACCOUNT             ("/accounts",           expects(0)),
+    ACCOUNT             ("/accounts",           none()),
     ACCOUNT_BY_ID       ("/accounts/{}",        expects(1)),
     ACCOUNT_LEDGER      ("/accounts/{}/ledger", expects(1)),
     ACCOUNT_HOLDS       ("/accounts/{}/holds",  expects(1)),
@@ -30,19 +30,42 @@ public enum Resource {
      * Orders API resources.
      * @see <a href=https://docs.pro.coinbase.com/#orders>https://docs.pro.coinbase.com/#orders</a>
      */
-    ORDER               ("/orders",             expects(0)),
+    ORDER               ("/orders",             none()),
     ORDER_BY_API_KEY    ("/orders/{}",          expects(1)),
     ORDER_BY_ORDER_ID   ("/orders/client::{}",  expects(1)),
 
     /**
      * Fills API resources.
      */
-    FILLS               ("/fills",              expects(0)),
+    FILLS               ("/fills",              none()),
 
     /**
      * Oracle API resources.
      */
-    ORACLE              ("/oracle",             expects(0));
+    ORACLE              ("/oracle",             none()),
+
+    /**
+     * Products API resources (not authenticated).
+     */
+    PRODUCT             ("/products",           none()),
+    PRODUCT_BY_ID       ("/products/{}",        expects(1)),
+    PRODUCT_ORDER_BOOK  ("/products/{}/book",   expects(1)),
+    PRODUCT_TICKER      ("/products/{}/ticker", expects(1)),
+    PRODUCT_TRADES      ("/products/{}/trades", expects(1)),
+    PRODUCT_CANDLES     ("/products/{}/candles",expects(1)),
+    PRODUCT_STATS       ("/products/{}/stats",  expects(1)),
+
+    /**
+     * Currencies API resources (not authenticated).
+     */
+    CURRENCY            ("/currencies",         none()),
+    CURRENCY_BY_ID      ("/currencies/{}",      expects(1)),
+
+    /**
+     * Time API resources (not authenticated).
+     */
+    TIME                ("/time",               none());
+
 
     // resource URI format
     @Getter private final String uri;
@@ -156,5 +179,14 @@ public enum Resource {
      */
     private static Range<Integer> expects(final int i) {
         return Range.is(i);
+    }
+
+    /**
+     * Creates range indicating no parameters should be passed.
+     *
+     * @return {@link Range} of 0
+     */
+    private static Range<Integer> none() {
+        return Range.is(0);
     }
 }
