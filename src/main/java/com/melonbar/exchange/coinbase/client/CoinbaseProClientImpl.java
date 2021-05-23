@@ -4,8 +4,12 @@ import com.melonbar.exchange.coinbase.api.authenticated.accounts.AccountsApi;
 import com.melonbar.exchange.coinbase.api.authenticated.fills.FillsApi;
 import com.melonbar.exchange.coinbase.api.authenticated.oracle.OracleApi;
 import com.melonbar.exchange.coinbase.api.authenticated.orders.OrdersApi;
+import com.melonbar.exchange.coinbase.api.marketdata.MarketDataApi;
+import com.melonbar.exchange.coinbase.api.resource.Resource;
+import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.model.fills.ListFillsRequest;
 import com.melonbar.exchange.coinbase.model.oracle.OracleRequest;
+import com.melonbar.exchange.coinbase.model.products.ProductCandlesRequest;
 import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.model.account.AccountsRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelAllOrdersRequest;
@@ -28,6 +32,8 @@ public class CoinbaseProClientImpl implements CoinbaseProClient {
     private final OrdersApi ordersApi;
     private final FillsApi fillsApi;
     private final OracleApi oracleApi;
+
+    private final MarketDataApi marketDataApi;
 
     // accounts
 
@@ -116,5 +122,13 @@ public class CoinbaseProClientImpl implements CoinbaseProClient {
     public Response getOracle(final OracleRequest oracleRequest) {
         Guard.nonNull(oracleRequest);
         return oracleApi.getOracle(oracleRequest);
+    }
+
+    // market data
+
+    @Override
+    public Response getProductCandles(final ProductCandlesRequest productCandlesRequest) {
+        Guard.nonNull(productCandlesRequest);
+        return marketDataApi.getProductCandles(productCandlesRequest);
     }
 }

@@ -4,6 +4,7 @@ import com.melonbar.exchange.coinbase.api.authenticated.accounts.AccountsApiImpl
 import com.melonbar.exchange.coinbase.api.authenticated.fills.FillsApiImpl;
 import com.melonbar.exchange.coinbase.api.authenticated.oracle.OracleApiImpl;
 import com.melonbar.exchange.coinbase.api.authenticated.orders.OrdersApiImpl;
+import com.melonbar.exchange.coinbase.api.marketdata.MarketDataApiImpl;
 import com.melonbar.exchange.coinbase.authentication.Authentication;
 import com.melonbar.exchange.coinbase.authentication.CoinbaseProAuthentication;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
@@ -36,6 +37,7 @@ public final class CoinbaseProClientFactory {
                 new AccountsApiImpl(httpClient, requestEnricher),
                 new OrdersApiImpl(httpClient, requestEnricher),
                 new FillsApiImpl(httpClient, requestEnricher),
-                new OracleApiImpl(httpClient, requestEnricher));
+                new OracleApiImpl(httpClient, requestEnricher),
+                new MarketDataApiImpl(httpClient, requestEnricher));
     }
 }

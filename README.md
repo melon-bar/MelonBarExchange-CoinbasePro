@@ -73,7 +73,7 @@ new Thread(() ->{
     while (true) {
         // buy 100 ETH whenever 1 ETH <= 2 USD
         if (priceTracker.getPrice(ProductId.ETH_USD).compareTo(BigDecimal.TWO) <= 0) {
-            coinbaseProClient.placeMarketOrder()
+            coinbaseProClient.placeMarketOrder();
         }
     }
 }).start();

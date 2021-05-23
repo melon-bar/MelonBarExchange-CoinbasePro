@@ -1,5 +1,6 @@
 package com.melonbar.exchange.coinbase.websocket.processing;
 
+import com.melonbar.exchange.coinbase.util.Guard;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,7 @@ public class AggregatedMessageHandler<T> implements MessageHandler.Whole<T> {
      * @param messageHandler {@link MessageHandler.Whole} to be added
      */
     public void addMessageHandler(final MessageHandler.Whole<T> messageHandler) {
+        Guard.nonNull(messageHandler);
         if (messageHandler instanceof AggregatedMessageHandler) {
             log.warn("Adding handler [{}] to itself will cause recursive message handler invocations!",
                     this.getClass().getName());

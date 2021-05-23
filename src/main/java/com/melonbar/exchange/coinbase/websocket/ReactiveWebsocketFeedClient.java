@@ -122,12 +122,12 @@ public abstract class ReactiveWebsocketFeedClient implements WebsocketFeedClient
     }
 
     /**
-     * Adds a {@link StringMessageHandler} to member instance of
+     * Adds a {@link MessageHandler.Whole} to member instance of
      * {@link AggregatedMessageHandler aggregatedMessageHandler}.
      *
      * @param messageHandler Message handler to register
      */
-    public void addMessageHandler(final StringMessageHandler messageHandler) {
+    public void addMessageHandler(final MessageHandler.Whole<String> messageHandler) {
         aggregatedMessageHandler.addMessageHandler(messageHandler);
     }
 }
