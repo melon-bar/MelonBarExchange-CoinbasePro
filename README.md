@@ -28,7 +28,7 @@ final CoinbaseProWebsocketFeedClient client = CoinbaseProWebsocketFeedClient.bui
         .withTrackers(priceTracker)
         // pass lambdas accepting String input message (more on this later)
         .withMessageHandlers(
-                (message) -> log.info("got message: {}"))
+                message -> log.info("got message: {}", message))
         // specify channels to subscribe to
         .withChannels(
                 Channel.of(ChannelType.TICKER),
