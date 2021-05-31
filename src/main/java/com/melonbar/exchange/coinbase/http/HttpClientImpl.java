@@ -8,6 +8,7 @@ import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;
 import com.melonbar.exchange.coinbase.util.Format;
 import com.melonbar.exchange.coinbase.util.request.Requests;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
@@ -16,7 +17,7 @@ import java.net.http.HttpResponse;
 import java.util.concurrent.Future;
 
 /**
- * HTTP client record implementation, which uses {@link java.net.http.HttpClient} as the underlying driver for
+ * HTTP client implementation, which uses {@link java.net.http.HttpClient} as the underlying driver for
  * dispatching requests the provided endpoint. This implementation expects all request information to be provided
  * by the input {@link BaseRequest}. This client determines all HTTP request parameters dynamically.
  *
@@ -26,8 +27,11 @@ import java.util.concurrent.Future;
  * <p> TODO: asynchronous request dispatch.
  */
 @Slf4j
-public record HttpClientImpl(Authentication authentication,
-                             java.net.http.HttpClient httpClient) implements HttpClient {
+@RequiredArgsConstructor
+public class HttpClientImpl implements HttpClient {
+
+    private final Authentication authentication;
+    private final java.net.http.HttpClient httpClient;
 
     /**
      * Dispatches an {@link HttpRequest} <i>synchronously</i>, generated from {@link BaseRequest} using
