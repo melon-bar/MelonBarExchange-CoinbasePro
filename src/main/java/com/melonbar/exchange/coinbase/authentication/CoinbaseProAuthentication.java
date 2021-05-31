@@ -4,6 +4,7 @@ import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.util.Format;
 
 import com.melonbar.exchange.coinbase.util.Guard;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
@@ -19,8 +20,12 @@ import java.util.Base64;
  * Authentication source for making <code>Trade</code> level permission requests to Coinbase Pro.
  */
 @Slf4j
-public record CoinbaseProAuthentication(String apiKey, String apiPassword,
-                                        String apiSecretKey) implements Authentication {
+@RequiredArgsConstructor
+public class CoinbaseProAuthentication implements Authentication {
+
+    private final String apiKey;
+    private final String apiPassword;
+    private final String apiSecretKey;
 
     private static final String HMAC_SHA256 = "HmacSHA256";
     private static final String CONTENT_TYPE = "Content-Type";
