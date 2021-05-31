@@ -3,6 +3,7 @@ package com.melonbar.exchange.coinbase.websocket;
 import com.melonbar.exchange.coinbase.websocket.message.Message;
 
 import javax.websocket.CloseReason;
+import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
 /**
@@ -44,4 +45,11 @@ public interface WebsocketFeedClient {
      * @param message Message to be sent
      */
     void sendMessage(final Message message);
+
+    /**
+     * Adds {@link MessageHandler.Whole} that handles {@link String} inbound messages.
+     *
+     * @param messageHandler {@link MessageHandler.Whole}
+     */
+    void addMessageHandler(final MessageHandler.Whole<String> messageHandler);
 }
