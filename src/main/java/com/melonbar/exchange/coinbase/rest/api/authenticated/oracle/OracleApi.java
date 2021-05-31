@@ -1,4 +1,4 @@
-package com.melonbar.exchange.coinbase.api.authenticated.oracle;
+package com.melonbar.exchange.coinbase.rest.api.authenticated.oracle;
 
 import com.melonbar.exchange.coinbase.model.oracle.OracleRequest;
 import com.melonbar.exchange.coinbase.model.response.Response;

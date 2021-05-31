@@ -2,7 +2,7 @@ package com.melonbar.exchange.coinbase.enrichment;
 
 import com.melonbar.exchange.coinbase.annotation.BodyField;
 import com.melonbar.exchange.coinbase.annotation.RequestField;
-import com.melonbar.exchange.coinbase.api.resource.Resource;
+import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.exception.InvalidRequestException;
 import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;

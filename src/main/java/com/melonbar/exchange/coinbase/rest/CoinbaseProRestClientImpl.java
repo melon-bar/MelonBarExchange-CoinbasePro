@@ -1,12 +1,10 @@
-package com.melonbar.exchange.coinbase.client;
+package com.melonbar.exchange.coinbase.rest;
 
-import com.melonbar.exchange.coinbase.api.authenticated.accounts.AccountsApi;
-import com.melonbar.exchange.coinbase.api.authenticated.fills.FillsApi;
-import com.melonbar.exchange.coinbase.api.authenticated.oracle.OracleApi;
-import com.melonbar.exchange.coinbase.api.authenticated.orders.OrdersApi;
-import com.melonbar.exchange.coinbase.api.marketdata.MarketDataApi;
-import com.melonbar.exchange.coinbase.api.resource.Resource;
-import com.melonbar.exchange.coinbase.http.Http;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.accounts.AccountsApi;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.fills.FillsApi;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.oracle.OracleApi;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.orders.OrdersApi;
+import com.melonbar.exchange.coinbase.rest.api.marketdata.MarketDataApi;
 import com.melonbar.exchange.coinbase.model.fills.ListFillsRequest;
 import com.melonbar.exchange.coinbase.model.oracle.OracleRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductCandlesRequest;
@@ -26,7 +24,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class CoinbaseProClientImpl implements CoinbaseProClient {
+public class CoinbaseProRestClientImpl implements CoinbaseProRestClient {
 
     private final AccountsApi accountsApi;
     private final OrdersApi ordersApi;

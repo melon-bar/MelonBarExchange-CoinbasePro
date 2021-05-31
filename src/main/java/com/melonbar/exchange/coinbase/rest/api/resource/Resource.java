@@ -1,4 +1,4 @@
-package com.melonbar.exchange.coinbase.api.resource;
+package com.melonbar.exchange.coinbase.rest.api.resource;
 
 import com.melonbar.exchange.coinbase.util.Format;
 import lombok.Getter;

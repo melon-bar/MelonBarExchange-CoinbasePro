@@ -1,4 +1,4 @@
-package com.melonbar.exchange.coinbase.client;
+package com.melonbar.exchange.coinbase.rest;
 
 import com.melonbar.exchange.coinbase.model.fills.ListFillsRequest;
 import com.melonbar.exchange.coinbase.model.oracle.OracleRequest;
@@ -15,7 +15,7 @@ import com.melonbar.exchange.coinbase.model.order.ListOrdersRequest;
 import com.melonbar.exchange.coinbase.model.order.MarketOrderRequest;
 import com.melonbar.exchange.coinbase.util.request.Pagination;
 
-public interface CoinbaseProClient {
+public interface CoinbaseProRestClient {
 
     Response listAccounts(final AccountsRequest accountsRequest);
 
