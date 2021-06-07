@@ -113,17 +113,22 @@ public class RequestEnricher implements Enricher {
         for (final Field field : request.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             final RequestField requestField = field.getAnnotation(RequestField.class);
-            final Object value = field.get(request);
 
-            // throw error on non-present required values
-            if (value == null && requestField.required()) {
-                throw new InvalidRequestException("Found missing request field for index: "
-                        + requestField.index());
+            // ignore fields with no @RequestField annotation
+            if (requestField == null) {
+                continue;
             }
 
-            // only handle members with @RequestField annotation, and skip non-present optional values
-            if (requestField == null || value == null) {
-                continue;
+            // throw error on non-present required values, skip non-present optional values
+            final Object value = field.get(request);
+            if (value == null) {
+                if (requestField.required()) {
+                    throw new InvalidRequestException("Found missing request field for index: "
+                            + requestField.index());
+                } else {
+                    // skip
+                    continue;
+                }
             }
 
             // append URI parameter, index stored for later sorting

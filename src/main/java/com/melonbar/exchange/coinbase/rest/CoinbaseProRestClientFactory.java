@@ -29,7 +29,10 @@ public final class CoinbaseProRestClientFactory {
     public static CoinbaseProRestClient createClient(final String apiKey,
                                                      final String apiPassword,
                                                      final String apiSecretKey) {
-        final Authentication authentication = new CoinbaseProAuthentication(apiKey, apiPassword, apiSecretKey);
+        return createClient(new CoinbaseProAuthentication(apiKey, apiPassword, apiSecretKey));
+    }
+
+    public static CoinbaseProRestClient createClient(final Authentication authentication) {
         final HttpClient httpClient = new HttpClientImpl(authentication, java.net.http.HttpClient.newHttpClient());
         final Enricher requestEnricher = new RequestEnricher();
 
