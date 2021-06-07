@@ -68,7 +68,7 @@ public class CandlesRange {
                 // PP = (high + low + close) / 3
                 () -> getGlobalHigh()
                         .add(getGlobalLow())
-                        .add(candles[candles.length-1].close())
+                        .add(candles[0].close())
                         .divide(BigDecimal.valueOf(3), RoundingMode.HALF_UP));
     }
 

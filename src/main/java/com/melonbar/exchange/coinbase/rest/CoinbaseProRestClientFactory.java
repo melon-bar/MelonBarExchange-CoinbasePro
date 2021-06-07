@@ -43,4 +43,21 @@ public final class CoinbaseProRestClientFactory {
                 new OracleApiImpl(httpClient, requestEnricher),
                 new MarketDataApiImpl(httpClient, requestEnricher));
     }
+
+    public static CoinbaseProRestClient createDebugClient(final String apiKey,
+                                                          final String apiPassword,
+                                                          final String apiSecretKey) {
+        final HttpClient httpClient = new HttpClientImpl(
+                new CoinbaseProAuthentication(apiKey, apiPassword, apiSecretKey),
+                java.net.http.HttpClient.newHttpClient());
+        final Enricher requestEnricher = new RequestEnricher();
+
+        return new CoinbaseProDebugRestClient(
+                httpClient,
+                new AccountsApiImpl(httpClient, requestEnricher),
+                new OrdersApiImpl(httpClient, requestEnricher),
+                new FillsApiImpl(httpClient, requestEnricher),
+                new OracleApiImpl(httpClient, requestEnricher),
+                new MarketDataApiImpl(httpClient, requestEnricher));
+    }
 }
