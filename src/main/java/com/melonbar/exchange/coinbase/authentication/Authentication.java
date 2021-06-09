@@ -15,12 +15,12 @@ public interface Authentication {
      *
      * @param httpRequestBuilder HTTP request being built
      * @param method HTTP method, probably {@link Http} as a string
-     * @param uri URI
+     * @param requestPath URI
      * @param body Request body as string, probably in JSON format
      * @return Signed {@link HttpRequest.Builder}
      */
     HttpRequest.Builder sign(final HttpRequest.Builder httpRequestBuilder,
                              final String method,
-                             final String uri,
+                             final String requestPath,
                              final String body);
 }

@@ -1,7 +1,6 @@
 package com.melonbar.exchange.coinbase.annotation;
 
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;
-import com.melonbar.exchange.coinbase.model.request.RequestBodyFieldType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,7 +25,7 @@ import java.lang.annotation.Target;
 public @interface BodyField {
 
     /**
-     * @return Key for json field
+     * @return Key for body parameter
      */
     String key();
 

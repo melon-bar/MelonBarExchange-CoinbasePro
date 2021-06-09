@@ -1,6 +1,7 @@
 package com.melonbar.exchange.coinbase.enrichment;
 
 import com.melonbar.exchange.coinbase.annotation.BodyField;
+import com.melonbar.exchange.coinbase.annotation.QueryField;
 import com.melonbar.exchange.coinbase.annotation.RequestField;
 import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.exception.InvalidRequestException;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -66,9 +68,9 @@ public class RequestEnricher implements Enricher {
     public <T extends BaseRequest> T enrichRequest(final T request, final Http method, final Resource resource) {
         request.setMethod(method);
         try {
-            request.setRequestPath(generateUri(resource, request));
-            request.setUri(AppConfig.COINBASE_PRO_API_ENDPOINT + request.getRequestPath());
+            request.setRequestPath(generateRequestPath(resource, request));
             request.setBody(generateRequestBody(request));
+            request.setUri(generateUri(request));
         } catch (IllegalAccessException | JsonProcessingException exception) {
             log.error("Failed to complete request enrichment, current request state: {}", request);
             throw new RuntimeException("Failed to populate URI and/or request body", exception);
@@ -80,8 +82,8 @@ public class RequestEnricher implements Enricher {
     }
 
     /**
-     * Evaluates URI for the request using the request fields (that are annotated with {@link RequestField}) and the
-     * corresponding {@link Resource resource authority}. Currently does not support optional URI parameters.
+     * Evaluates request path using the request fields (that are annotated with {@link RequestField}) and the
+     * corresponding {@link Resource resource authority}. Currently does not support optional parameters.
      *
      * @param resource Resource authority
      * @param request Request whose URI is being evaluated
@@ -89,19 +91,80 @@ public class RequestEnricher implements Enricher {
      * @return Evaluated URI
      * @throws IllegalAccessException When access to an inaccessible field is attempted
      */
-    private <T extends BaseRequest> String generateUri(final Resource resource, final T request)
+    private <T extends BaseRequest> String generateRequestPath(final Resource resource, final T request)
             throws IllegalAccessException {
         Guard.nonNull(resource, request);
+        final String baseRequestPath = populateBaseRequestPath(resource, request);
 
+        // get all fields annotated with @QueryField, including those from inheritance hierarchy
+        final Field[] fields = FieldUtils.getFieldsWithAnnotation(request.getClass(), QueryField.class);
+
+        // no query fields, no more work needed
+        if (ArrayUtils.isEmpty(fields)) {
+            return baseRequestPath;
+        }
+
+        // convert to query string
+        final StringBuilder queryStringBuilder = new StringBuilder("?");
+        for (final Field field : fields) {
+            field.setAccessible(true);
+            final QueryField queryField = field.getAnnotation(QueryField.class);
+            final Optional<Object> maybeValue = Optional.ofNullable(field.get(request));
+            maybeValue.ifPresentOrElse(
+                    value -> {
+                        // do nothing on arrays, currently unsupported
+                        if (value.getClass().isArray()) {
+                            log.warn("Arrays are unsupported for query field types. Field {} has array type [{}].",
+                                    field.getName(), value.getClass().getName());
+                            return;
+                        }
+                        // append to query string builder
+                        queryStringBuilder.append(queryField.key())
+                                .append("=")
+                                .append(value)
+                                .append("&");
+                    },
+                    () -> {
+                        // throw error on missing required fields
+                        if (queryField.required()) {
+                            throw new IllegalStateException(
+                                    Format.format("Required query field {} (key={}) for request {} is null!",
+                                            field.getName(), queryField.key(), request.getClass().getSimpleName()));
+                        }
+                    });
+        }
+
+        final char tailChar = queryStringBuilder.charAt(queryStringBuilder.length()-1);
+        final boolean tailIsDelimitingChar = tailChar == '&' || tailChar == '?';
+
+        // handle pagination
+        if (request.getPagination() != null) {
+            if (!tailIsDelimitingChar) {
+                queryStringBuilder.append('?');
+            }
+            queryStringBuilder.append(request.getPagination());
+        } else if (tailIsDelimitingChar) {
+            // remove extraneous ampersand or question mark since nothing needs to be added
+            queryStringBuilder.deleteCharAt(queryStringBuilder.length()-1);
+        }
+
+        return baseRequestPath + queryStringBuilder;
+    }
+
+    /**
+     * TODO
+     * @param resource
+     * @param request
+     * @param <T>
+     * @return
+     * @throws IllegalAccessException
+     */
+    private <T extends BaseRequest> String populateBaseRequestPath(final Resource resource, final T request)
+            throws IllegalAccessException {
         final Class<? extends BaseRequest> requestClass = request.getClass();
         final UriParameter[] uriParameters = new UriParameter[
                 FieldUtils.getFieldsListWithAnnotation(requestClass, RequestField.class).size()];
         String uriFormat = resource.getUri();
-
-        // may be paginated
-        if (request.getPagination() != null) {
-            uriFormat += request.getPagination().toString();
-        }
 
         // URI with no params
         if (resource.getMaxArgs() < 1) {
@@ -137,7 +200,7 @@ public class RequestEnricher implements Enricher {
 
         // sort in ascending order by index and populate URI
         Arrays.sort(uriParameters);
-        return resource.populateUri(Arrays.stream(uriParameters)
+        return resource.populateRequestPath(Arrays.stream(uriParameters)
                 .map(UriParameter::value)
                 .toArray(Object[]::new));
     }
@@ -158,21 +221,18 @@ public class RequestEnricher implements Enricher {
         Guard.nonNull(request);
 
         // get all fields annotated with @BodyField, including those from inheritance hierarchy
-        final Field[] fields = Arrays.stream(FieldUtils.getAllFields(request.getClass()))
-                .filter(field -> field.getAnnotation(BodyField.class) != null)
-                .toArray(Field[]::new);
+        final Field[] fields = FieldUtils.getFieldsWithAnnotation(request.getClass(), BodyField.class);
 
         // no body fields, no more work needed
-        if (fields.length == 0) {
+        if (ArrayUtils.isEmpty(fields)) {
             return "";
         }
 
+        // convert request body to string format with deduped keys (if necessary)
         final ObjectNode root = OBJECT_MAPPER.createObjectNode();
-
-        // process each field
         for (final Field field : fields) {
             field.setAccessible(true);
-            final BodyField bodyField = field.getAnnotation(BodyField.class);
+            final BodyField bodyParameter = field.getAnnotation(BodyField.class);
             final Optional<Object> maybeValue = Optional.ofNullable(field.get(request));
             maybeValue.ifPresentOrElse(
                     // body field value present, process
@@ -185,29 +245,46 @@ public class RequestEnricher implements Enricher {
                             final Object[] values = (Object[]) value;
                             int i = 0;
                             for (final Object _value : values) {
-                                root.put(bodyField.key() + Format.format(DE_DUPE_SUFFIX_FORMAT, i++),
+                                root.put(bodyParameter.key() + Format.format(DE_DUPE_SUFFIX_FORMAT, i++),
                                         _value.toString());
                             }
                         } else {
                             // add to object mapper
-                            root.put(bodyField.key(), value.toString());
+                            root.put(bodyParameter.key(), value.toString());
                         }
                     },
                     // body field value not present, throw exception if marked as required
                     () -> {
-                        if (bodyField.required()) {
-                            throw new RuntimeException(Format.format("Required field {} (key={}) for request {} is null!",
-                                    field.getName(), bodyField.key(), request.getClass().getSimpleName()));
+                        if (bodyParameter.required()) {
+                            throw new IllegalStateException(
+                                    Format.format("Required body field {} (key={}) for request {} is null!",
+                                            field.getName(), bodyParameter.key(), request.getClass().getSimpleName()));
                         }
-                    }
-            );
+                    });
         }
+        final String requestBody = dedupeKeys(OBJECT_MAPPER.writer()
+                .writeValueAsString(root)
+                .trim());
 
-        // convert request body to string format with deduped keys (if necessary)
-        final String requestBody = dedupeKeys(OBJECT_MAPPER.writer().writeValueAsString(root).trim());
         log.info("Generated body for request type {}: [{}]", request.getClass().getSimpleName(), requestBody);
 
         return requestBody;
+    }
+
+    /**
+     * TODO
+     * @param request
+     * @param <T>
+     * @return
+     * @throws IllegalAccessException
+     */
+    private <T extends BaseRequest> String generateUri(final T request) throws IllegalAccessException {
+        if (request.getRequestPath() == null) {
+            throw new IllegalStateException(
+                    "Input request has null request path, which is needed to generate the URI.");
+        }
+        // combine URI components
+        return AppConfig.COINBASE_PRO_API_ENDPOINT + request.getRequestPath();
     }
 
     /**

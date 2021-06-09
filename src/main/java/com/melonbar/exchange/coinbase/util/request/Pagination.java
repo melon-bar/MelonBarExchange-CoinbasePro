@@ -11,6 +11,6 @@ public record Pagination(Cursor cursor, int page, int limit) {
 
     public String toString() {
         Guard.nonNull(cursor);
-        return "?" + cursor.name().toLowerCase() + "=" + page + "&limit=" + limit;
+        return cursor.name().toLowerCase() + "=" + page + "&limit=" + limit;
     }
 }

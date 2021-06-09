@@ -10,10 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Enum containing information on resource authority. Each {@link Resource} is defined by its resource URI format and
+ * Enum containing information on resource authority. Each {@link Resource} is defined by its resource request path format and
  * the expected argument count. Currently there is only support for static argument counts (no optional args).
  *
- * <p> TODO: Perform auto parsing on URI to determine expected args count range instead of relying on manual definition.
+ * <p> TODO: Perform auto parsing on request path to determine expected args count range instead of relying on manual definition.
  */
 public enum Resource {
 
@@ -67,16 +67,16 @@ public enum Resource {
     TIME                ("/time",               none());
 
 
-    // resource URI format
+    // resource request path format
     @Getter private final String uri;
 
     // args count range
     private final Range<Integer> argsRange;
 
     /**
-     * Initialize resource fields and validate the URI format and args range is valid.
+     * Initialize resource fields and validate the request path format and args range is valid.
      *
-     * @param uri URI format
+     * @param uri request path format
      * @param argsRange Expected args range
      */
     Resource(final String uri, final Range<Integer> argsRange) {
@@ -115,22 +115,22 @@ public enum Resource {
     }
 
     /**
-     * Formats URI based on the provided args array. Performs validation on args beforehand. If the validation check
+     * Formats request path based on the provided args array. Performs validation on args beforehand. If the validation check
      * fails, an {@link IllegalArgumentException} is thrown.
      *
      * @param args Args
-     * @return Formatted URI
+     * @return Formatted request path
      */
-    public String populateUri(final Object[] args) {
+    public String populateRequestPath(final Object[] args) {
         if (isValidArgsCount(args)) {
             return Format.format(uri, args);
         }
-        throw new IllegalArgumentException(Format.format("Invalid args count for URI: [{}], args: {}",
+        throw new IllegalArgumentException(Format.format("Invalid args count for request path: [{}], args: {}",
                 uri, Arrays.toString(args)));
     }
 
     /**
-     * Validation check on format URI and expected args range. Ensures the correct number of delimiters are present
+     * Validation check on format request path and expected args range. Ensures the correct number of delimiters are present
      * and that every open bracket has a matching closing bracket.
      *
      * <p> Current only accepts delimiters: <code>{}</code>.
@@ -142,7 +142,7 @@ public enum Resource {
         // validate bracket counts
         if (openBracketCount != closingBracketCount) {
             throw new IllegalStateException(Format.format(
-                    "Invalid bracket arrangement for URI [{}]. Open brackets: {}, closing brackets: {}",
+                    "Invalid bracket arrangement for request path [{}]. Open brackets: {}, closing brackets: {}",
                     uri, openBracketCount, closingBracketCount));
         }
 
@@ -150,13 +150,13 @@ public enum Resource {
         final Matcher delimiterFormat = Pattern.compile("\\{}").matcher(uri);
         if (delimiterFormat.results().count() != openBracketCount) {
             throw new IllegalStateException(Format.format(
-                    "Invalid bracket arrangement for URI [{}].", uri));
+                    "Invalid bracket arrangement for request path [{}].", uri));
         }
 
-        // validate URI expected args count matches input range
+        // validate request path expected args count matches input range
         if (!isValidArgsCount(openBracketCount)) {
             throw new IllegalStateException(Format.format(
-                    "Expected args range {} does not match format URI: [{}]", argsRange, uri));
+                    "Expected args range {} does not match format request path: [{}]", argsRange, uri));
         }
     }
 

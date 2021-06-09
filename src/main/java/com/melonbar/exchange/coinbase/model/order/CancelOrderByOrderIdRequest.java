@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.model.order;
 
-import com.melonbar.exchange.coinbase.annotation.BodyField;
+import com.melonbar.exchange.coinbase.annotation.QueryField;
 import com.melonbar.exchange.coinbase.annotation.RequestField;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public class CancelOrderByOrderIdRequest extends BaseRequest {
 
-    @BodyField(key = "product_id")
+    @QueryField(key = "product_id")
     private final String productId;
 
     @RequestField(index = 0)
