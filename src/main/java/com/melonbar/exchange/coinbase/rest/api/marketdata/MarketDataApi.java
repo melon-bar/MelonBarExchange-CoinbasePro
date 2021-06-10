@@ -1,4 +1,4 @@
-package com.melonbar.exchange.coinbase.api.marketdata;
+package com.melonbar.exchange.coinbase.rest.api.marketdata;
 
 import com.melonbar.exchange.coinbase.model.currencies.CurrenciesRequest;
 import com.melonbar.exchange.coinbase.model.currencies.CurrencyByIdRequest;

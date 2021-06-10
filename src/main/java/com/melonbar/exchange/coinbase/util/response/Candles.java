@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.util.response;
 
-import com.melonbar.exchange.coinbase.model.products.Candle;
+import com.melonbar.exchange.coinbase.model.core.Candle;
 import com.melonbar.exchange.coinbase.model.response.PostProcessor;
 
 import java.util.Arrays;

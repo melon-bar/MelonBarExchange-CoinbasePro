@@ -1,6 +1,6 @@
-package com.melonbar.exchange.coinbase.api.authenticated.orders;
+package com.melonbar.exchange.coinbase.rest.api.authenticated.orders;
 
-import com.melonbar.exchange.coinbase.api.resource.Resource;
+import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
 import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.http.HttpClient;

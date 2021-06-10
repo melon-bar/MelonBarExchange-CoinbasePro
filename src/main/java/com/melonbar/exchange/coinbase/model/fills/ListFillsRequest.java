@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.model.fills;
 
-import com.melonbar.exchange.coinbase.annotation.BodyField;
+import com.melonbar.exchange.coinbase.annotation.QueryField;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;
 import lombok.Builder;
@@ -8,10 +8,10 @@ import lombok.Builder;
 @Builder
 public class ListFillsRequest extends BaseRequest {
 
-    @BodyField(key = "order_id")
+    @QueryField(key = "order_id")
     private final String orderId;
 
-    @BodyField(key = "product_id")
+    @QueryField(key = "product_id")
     private final ProductId productId;
 
     @Override

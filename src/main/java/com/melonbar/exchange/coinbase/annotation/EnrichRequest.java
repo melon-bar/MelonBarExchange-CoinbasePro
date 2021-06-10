@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.annotation;
 
-import com.melonbar.exchange.coinbase.api.resource.Resource;
+import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.aspect.RequestEnrichmentAspect;
 import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;

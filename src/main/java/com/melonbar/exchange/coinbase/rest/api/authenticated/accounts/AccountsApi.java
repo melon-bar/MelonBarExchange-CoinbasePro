@@ -1,4 +1,4 @@
-package com.melonbar.exchange.coinbase.api.authenticated.accounts;
+package com.melonbar.exchange.coinbase.rest.api.authenticated.accounts;
 
 import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.model.account.AccountsRequest;

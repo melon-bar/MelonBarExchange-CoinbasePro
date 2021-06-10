@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.model.products;
 
-import com.melonbar.exchange.coinbase.annotation.BodyField;
+import com.melonbar.exchange.coinbase.annotation.QueryField;
 import com.melonbar.exchange.coinbase.annotation.RequestField;
 import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.model.request.BaseRequest;
@@ -13,12 +13,12 @@ public class ProductCandlesRequest extends BaseRequest {
     @RequestField(index = 0)
     public ProductId productId;
 
-    @BodyField(key = "start")
+    @QueryField(key = "start")
     public DateTime startTime;
 
-    @BodyField(key = "end")
+    @QueryField(key = "end")
     public DateTime endTime;
 
-    @BodyField(key = "granularity")
+    @QueryField(key = "granularity")
     public Granularity granularity;
 }

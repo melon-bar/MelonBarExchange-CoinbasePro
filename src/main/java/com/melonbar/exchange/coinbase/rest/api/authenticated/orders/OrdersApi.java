@@ -1,4 +1,4 @@
-package com.melonbar.exchange.coinbase.api.authenticated.orders;
+package com.melonbar.exchange.coinbase.rest.api.authenticated.orders;
 
 import com.melonbar.exchange.coinbase.model.response.Response;
 import com.melonbar.exchange.coinbase.model.order.CancelAllOrdersRequest;

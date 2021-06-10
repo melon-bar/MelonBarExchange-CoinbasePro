@@ -1,6 +1,6 @@
-package com.melonbar.exchange.coinbase.api.marketdata;
+package com.melonbar.exchange.coinbase.rest.api.marketdata;
 
-import com.melonbar.exchange.coinbase.api.resource.Resource;
+import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
 import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.http.HttpClient;
