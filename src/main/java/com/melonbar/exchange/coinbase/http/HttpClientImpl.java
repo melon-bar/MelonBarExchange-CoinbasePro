@@ -24,8 +24,6 @@ import java.util.concurrent.Future;
  *
  * <p> This implementation's intent is to make authenticated requests, requiring an implementation of
  * {@link Authentication} to be provided.
- *
- * <p> TODO: asynchronous request dispatch.
  */
 @Slf4j
 @RequiredArgsConstructor

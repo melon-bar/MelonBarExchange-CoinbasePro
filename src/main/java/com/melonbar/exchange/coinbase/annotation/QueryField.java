@@ -1,12 +1,15 @@
 package com.melonbar.exchange.coinbase.annotation;
 
+import com.melonbar.exchange.coinbase.enrichment.RequestEnricher;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * TODO
+ * Annotation to mark request class members as query parameters, which will be constructed into a query string by the
+ * {@link RequestEnricher} during execution level.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

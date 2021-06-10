@@ -1,8 +1,6 @@
 package com.melonbar.exchange.coinbase.authentication;
 
-import com.melonbar.exchange.coinbase.http.Http;
 import com.melonbar.exchange.coinbase.util.Format;
-
 import com.melonbar.exchange.coinbase.util.Guard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

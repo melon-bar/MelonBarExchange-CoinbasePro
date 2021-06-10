@@ -24,9 +24,13 @@ import java.util.Optional;
 
 /**
  * Enricher for Coinbase Pro API requests. Handles core responsibilities of populating URI format
- * based on the input implementation of {@link BaseRequest}. During request enrichment, there are two core components that
- * must be in sync: (1) the resource authority, defined by {@link Resource}, (2) the URI params annotated by
- * {@link RequestField} in the extension of {@link BaseRequest}.
+ * based on the input implementation of {@link BaseRequest}. During request enrichment, there are two
+ * core components that must be in sync: (1) the resource, defined by {@link Resource}, (2) the request
+ * path parameters annotated by {@link RequestField} in the extension of {@link BaseRequest}.
+ *
+ * <p> Given a {@link BaseRequest request}, {@link Http method}, and {@link Resource resource}, enrichment
+ * will mutate the input <code>request</code> and populate its: HTTP method, request path, request body,
+ * full URI with query string and pagination.
  */
 @Slf4j
 public class RequestEnricher implements Enricher {
@@ -94,7 +98,7 @@ public class RequestEnricher implements Enricher {
     private <T extends BaseRequest> String generateRequestPath(final Resource resource, final T request)
             throws IllegalAccessException {
         Guard.nonNull(resource, request);
-        final String baseRequestPath = populateBaseRequestPath(resource, request);
+        final String baseRequestPath = generateBaseRequestPath(resource, request);
 
         // get all fields annotated with @QueryField, including those from inheritance hierarchy
         final Field[] fields = FieldUtils.getFieldsWithAnnotation(request.getClass(), QueryField.class);
@@ -152,14 +156,15 @@ public class RequestEnricher implements Enricher {
     }
 
     /**
-     * TODO
-     * @param resource
-     * @param request
-     * @param <T>
-     * @return
-     * @throws IllegalAccessException
+     * Generates the base request path provided the {@link Resource} using the input request's members annotated
+     * with {@link RequestField}.
+     *
+     * @param resource {@link Resource}
+     * @param request Request
+     * @param <T> Extension of {@link BaseRequest}
+     * @return Base request path
      */
-    private <T extends BaseRequest> String populateBaseRequestPath(final Resource resource, final T request)
+    private <T extends BaseRequest> String generateBaseRequestPath(final Resource resource, final T request)
             throws IllegalAccessException {
         final Class<? extends BaseRequest> requestClass = request.getClass();
         final UriParameter[] uriParameters = new UriParameter[
@@ -272,13 +277,14 @@ public class RequestEnricher implements Enricher {
     }
 
     /**
-     * TODO
-     * @param request
-     * @param <T>
-     * @return
-     * @throws IllegalAccessException
+     * Prepends the request path with the Coinbase Pro REST endpoint, defined in config.
+     *
+     * @param request Request
+     * @param <T> Extension of {@link BaseRequest}
+     * @return Full URI, ready for use in HTTP request
+     * @throws IllegalStateException if the input request has no request path set
      */
-    private <T extends BaseRequest> String generateUri(final T request) throws IllegalAccessException {
+    private <T extends BaseRequest> String generateUri(final T request) {
         if (request.getRequestPath() == null) {
             throw new IllegalStateException(
                     "Input request has null request path, which is needed to generate the URI.");
