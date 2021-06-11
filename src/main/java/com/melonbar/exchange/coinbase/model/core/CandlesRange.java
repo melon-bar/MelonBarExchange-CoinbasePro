@@ -36,19 +36,23 @@ public class CandlesRange {
         }
 
         // create local immutable copy of candles then sort in ascending order
-        this.candles = Arrays.copyOf(candles, candles.length);
-        Arrays.sort(candles);
+        final Candle[] inputCandlesCopy = Arrays.copyOf(candles, candles.length);
+        Arrays.sort(inputCandlesCopy);
+
+        this.candles = inputCandlesCopy;
 
         // compute width and validate its consistency across all candles
-        final long millisWidth = computeMillisCandleWidth(candles);
+        final long millisWidth = computeMillisCandleWidth(inputCandlesCopy);
 
         // validation checks
-        validateConsistentCandleWidth(candles, millisWidth);
+        validateConsistentCandleWidth(inputCandlesCopy, millisWidth);
 
         // store time range and seconds width
         this.secondsWidth = millisWidth / 1000;
-        this.start = candles[0].startTime();
-        this.end = candles[candles.length-1].startTime();
+        this.start = inputCandlesCopy[0].startTime();
+        this.end = inputCandlesCopy[inputCandlesCopy.length-1]
+                .startTime()
+                .plusMillis((int) millisWidth);
     }
 
     public Candle[] getCandles() {

@@ -1,6 +1,7 @@
 package com.melonbar.exchange.coinbase.util.response;
 
 import com.melonbar.exchange.coinbase.model.core.Candle;
+import com.melonbar.exchange.coinbase.model.core.CandlesRange;
 import com.melonbar.exchange.coinbase.model.response.PostProcessor;
 
 import java.util.Arrays;
@@ -13,6 +14,12 @@ public final class Candles {
         return response -> Arrays.stream(parseCandles(response.content()))
                 .map(Candle::from)
                 .toArray(Candle[]::new);
+    }
+
+    public static PostProcessor<CandlesRange> getCandlesRange() {
+        return response -> getCandles()
+                .andThen(CandlesRange::new)
+                .apply(response);
     }
 
     private static String[] parseCandles(final String body) {

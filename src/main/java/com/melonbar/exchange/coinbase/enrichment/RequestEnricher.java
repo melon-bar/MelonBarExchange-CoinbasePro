@@ -192,7 +192,7 @@ public class RequestEnricher implements Enricher {
             if (value == null) {
                 if (requestField.required()) {
                     throw new InvalidRequestException("Found missing request field for index: "
-                            + requestField.index());
+                            + requestField.index() + ", for request type " + request.getClass().getSimpleName());
                 } else {
                     // skip
                     continue;
