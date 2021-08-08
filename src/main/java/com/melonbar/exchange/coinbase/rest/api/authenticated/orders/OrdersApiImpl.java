@@ -2,9 +2,9 @@ package com.melonbar.exchange.coinbase.rest.api.authenticated.orders;
 
 import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
-import com.melonbar.exchange.coinbase.http.Http;
-import com.melonbar.exchange.coinbase.http.HttpClient;
-import com.melonbar.exchange.coinbase.model.response.Response;
+import com.melonbar.core.http.Http;
+import com.melonbar.core.http.HttpClient;
+import com.melonbar.core.http.response.Response;
 import com.melonbar.exchange.coinbase.model.order.CancelAllOrdersRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelOrderByApiKeyRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelOrderByOrderIdRequest;

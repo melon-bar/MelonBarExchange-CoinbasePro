@@ -2,9 +2,9 @@ package com.melonbar.exchange.coinbase.rest.api.authenticated.accounts;
 
 import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
-import com.melonbar.exchange.coinbase.http.Http;
-import com.melonbar.exchange.coinbase.http.HttpClient;
-import com.melonbar.exchange.coinbase.model.response.Response;
+import com.melonbar.core.http.Http;
+import com.melonbar.core.http.HttpClient;
+import com.melonbar.core.http.response.Response;
 import com.melonbar.exchange.coinbase.model.account.AccountsRequest;
 
 public record AccountsApiImpl(HttpClient httpClient, Enricher requestEnricher) implements AccountsApi {

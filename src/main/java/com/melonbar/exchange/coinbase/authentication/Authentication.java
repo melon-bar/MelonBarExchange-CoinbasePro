@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.authentication;
 
-import com.melonbar.exchange.coinbase.http.Http;
+import com.melonbar.core.http.Http;
 
 import java.net.http.HttpRequest;
 

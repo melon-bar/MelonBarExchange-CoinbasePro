@@ -6,7 +6,7 @@ import com.melonbar.exchange.coinbase.model.products.ProductByIdRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductCandlesRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductOrderBookRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductRequest;
-import com.melonbar.exchange.coinbase.model.response.Response;
+import com.melonbar.core.http.response.Response;
 
 public interface MarketDataApi {
 

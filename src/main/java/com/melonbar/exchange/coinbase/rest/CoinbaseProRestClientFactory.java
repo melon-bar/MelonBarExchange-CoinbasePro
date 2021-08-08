@@ -9,7 +9,7 @@ import com.melonbar.exchange.coinbase.authentication.Authentication;
 import com.melonbar.exchange.coinbase.authentication.CoinbaseProAuthentication;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
 import com.melonbar.exchange.coinbase.enrichment.RequestEnricher;
-import com.melonbar.exchange.coinbase.http.HttpClient;
+import com.melonbar.core.http.HttpClient;
 import com.melonbar.exchange.coinbase.http.HttpClientImpl;
 
 /**

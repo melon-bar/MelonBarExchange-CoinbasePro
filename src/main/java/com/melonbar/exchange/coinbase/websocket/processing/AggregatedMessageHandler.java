@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.websocket.processing;
 
-import com.melonbar.exchange.coinbase.util.Guard;
+import com.melonbar.core.util.Guard;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

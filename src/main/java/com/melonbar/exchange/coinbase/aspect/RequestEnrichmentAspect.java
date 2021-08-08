@@ -1,12 +1,12 @@
 package com.melonbar.exchange.coinbase.aspect;
 
+import com.melonbar.core.http.Http;
+import com.melonbar.core.http.request.BaseRequest;
+import com.melonbar.core.util.Format;
 import com.melonbar.exchange.coinbase.annotation.EnrichRequest;
-import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
-import com.melonbar.exchange.coinbase.http.Http;
-import com.melonbar.exchange.coinbase.model.request.BaseRequest;
-import com.melonbar.exchange.coinbase.util.Format;
 import com.melonbar.exchange.coinbase.enrichment.RequestEnricher;
+import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

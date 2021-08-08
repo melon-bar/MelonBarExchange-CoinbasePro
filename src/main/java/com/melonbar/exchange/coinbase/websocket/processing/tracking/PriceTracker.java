@@ -1,7 +1,7 @@
 package com.melonbar.exchange.coinbase.websocket.processing.tracking;
 
-import com.melonbar.exchange.coinbase.model.core.ProductId;
-import com.melonbar.exchange.coinbase.util.JsonUtils;
+import com.melonbar.core.model.ProductId;
+import com.melonbar.core.util.JsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

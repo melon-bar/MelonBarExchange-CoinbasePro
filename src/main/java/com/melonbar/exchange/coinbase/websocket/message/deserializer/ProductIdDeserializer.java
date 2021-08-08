@@ -3,8 +3,8 @@ package com.melonbar.exchange.coinbase.websocket.message.deserializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.melonbar.exchange.coinbase.model.core.ProductId;
-import com.melonbar.exchange.coinbase.util.Format;
+import com.melonbar.core.model.ProductId;
+import com.melonbar.core.util.Format;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;

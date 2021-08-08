@@ -1,7 +1,7 @@
 package com.melonbar.exchange.coinbase.websocket.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.melonbar.exchange.coinbase.model.core.ProductId;
+import com.melonbar.core.model.ProductId;
 import com.melonbar.exchange.coinbase.websocket.message.model.Channel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

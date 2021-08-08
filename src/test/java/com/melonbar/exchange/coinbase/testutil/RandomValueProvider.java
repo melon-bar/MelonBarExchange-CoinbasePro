@@ -1,7 +1,7 @@
 package com.melonbar.exchange.coinbase.testutil;
 
-import com.melonbar.exchange.coinbase.model.core.Currency;
-import com.melonbar.exchange.coinbase.model.core.ProductId;
+import com.melonbar.core.model.Currency;
+import com.melonbar.core.model.ProductId;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderSide;
 import com.melonbar.exchange.coinbase.websocket.message.model.Channel;
 import com.melonbar.exchange.coinbase.websocket.message.model.ChannelType;

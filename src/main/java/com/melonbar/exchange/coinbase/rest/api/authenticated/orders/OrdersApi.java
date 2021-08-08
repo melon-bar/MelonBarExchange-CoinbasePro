@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.rest.api.authenticated.orders;
 
-import com.melonbar.exchange.coinbase.model.response.Response;
+import com.melonbar.core.http.response.Response;
 import com.melonbar.exchange.coinbase.model.order.CancelAllOrdersRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelOrderByApiKeyRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelOrderByOrderIdRequest;

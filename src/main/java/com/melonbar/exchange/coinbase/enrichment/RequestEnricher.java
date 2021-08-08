@@ -1,15 +1,15 @@
 package com.melonbar.exchange.coinbase.enrichment;
 
+import com.melonbar.core.util.Format;
+import com.melonbar.core.util.Guard;
 import com.melonbar.exchange.coinbase.annotation.BodyField;
 import com.melonbar.exchange.coinbase.annotation.QueryField;
 import com.melonbar.exchange.coinbase.annotation.RequestField;
 import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.exception.InvalidRequestException;
-import com.melonbar.exchange.coinbase.http.Http;
-import com.melonbar.exchange.coinbase.model.request.BaseRequest;
+import com.melonbar.core.http.Http;
+import com.melonbar.core.http.request.BaseRequest;
 import com.melonbar.exchange.coinbase.util.AppConfig;
-import com.melonbar.exchange.coinbase.util.Format;
-import com.melonbar.exchange.coinbase.util.Guard;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -192,7 +192,7 @@ public class RequestEnricher implements Enricher {
             if (value == null) {
                 if (requestField.required()) {
                     throw new InvalidRequestException("Found missing request field for index: "
-                            + requestField.index());
+                            + requestField.index() + ", for request type " + request.getClass().getSimpleName());
                 } else {
                     // skip
                     continue;

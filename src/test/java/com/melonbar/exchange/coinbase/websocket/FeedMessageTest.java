@@ -1,8 +1,8 @@
 package com.melonbar.exchange.coinbase.websocket;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.melonbar.core.util.Format;
 import com.melonbar.exchange.coinbase.testutil.RandomValueProvider;
-import com.melonbar.exchange.coinbase.util.Format;
 import com.melonbar.exchange.coinbase.websocket.message.ErrorMessage;
 import com.melonbar.exchange.coinbase.websocket.message.FeedMessage;
 import com.melonbar.exchange.coinbase.websocket.message.HeartbeatMessage;

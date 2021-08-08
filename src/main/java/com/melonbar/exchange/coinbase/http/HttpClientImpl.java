@@ -1,14 +1,15 @@
 package com.melonbar.exchange.coinbase.http;
 
+import com.melonbar.core.http.HttpClient;
+import com.melonbar.core.http.request.BaseRequest;
+import com.melonbar.core.http.response.Response;
+import com.melonbar.core.http.response.ResponseBodyHandler;
+import com.melonbar.core.util.Format;
+import com.melonbar.core.util.request.Requests;
 import com.melonbar.exchange.coinbase.authentication.Authentication;
 import com.melonbar.exchange.coinbase.exception.BadRequestException;
 import com.melonbar.exchange.coinbase.exception.TransientException;
-import com.melonbar.exchange.coinbase.http.handler.ResponseBodyHandler;
-import com.melonbar.exchange.coinbase.model.response.Response;
-import com.melonbar.exchange.coinbase.model.request.BaseRequest;
 import com.melonbar.exchange.coinbase.util.AppConfig;
-import com.melonbar.exchange.coinbase.util.Format;
-import com.melonbar.exchange.coinbase.util.request.Requests;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
