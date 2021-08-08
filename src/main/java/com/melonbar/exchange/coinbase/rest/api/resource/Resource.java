@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.rest.api.resource;
 
-import com.melonbar.exchange.coinbase.util.Format;
+import com.melonbar.core.util.Format;
 import lombok.Getter;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;

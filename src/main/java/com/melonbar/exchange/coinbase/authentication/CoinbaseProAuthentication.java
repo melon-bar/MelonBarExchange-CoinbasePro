@@ -1,7 +1,7 @@
 package com.melonbar.exchange.coinbase.authentication;
 
-import com.melonbar.exchange.coinbase.util.Format;
-import com.melonbar.exchange.coinbase.util.Guard;
+import com.melonbar.core.util.Format;
+import com.melonbar.core.util.Guard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;

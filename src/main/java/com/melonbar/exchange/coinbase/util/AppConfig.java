@@ -1,5 +1,6 @@
 package com.melonbar.exchange.coinbase.util;
 
+import com.melonbar.core.util.Guard;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.melonbar.exchange.coinbase.websocket;
 
-import com.melonbar.exchange.coinbase.model.core.ProductId;
+import com.melonbar.core.model.ProductId;
 import com.melonbar.exchange.coinbase.util.AppConfig;
 import com.melonbar.exchange.coinbase.websocket.message.SubscribeMessage;
 import com.melonbar.exchange.coinbase.websocket.message.model.Channel;

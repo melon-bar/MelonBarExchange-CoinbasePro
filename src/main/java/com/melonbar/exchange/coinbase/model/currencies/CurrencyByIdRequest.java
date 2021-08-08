@@ -1,8 +1,8 @@
 package com.melonbar.exchange.coinbase.model.currencies;
 
+import com.melonbar.core.model.Currency;
 import com.melonbar.exchange.coinbase.annotation.RequestField;
-import com.melonbar.exchange.coinbase.model.core.Currency;
-import com.melonbar.exchange.coinbase.model.request.BaseRequest;
+import com.melonbar.core.http.request.BaseRequest;
 import lombok.Builder;
 
 @Builder

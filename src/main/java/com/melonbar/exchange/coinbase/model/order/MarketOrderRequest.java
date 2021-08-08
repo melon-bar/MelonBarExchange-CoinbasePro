@@ -1,12 +1,12 @@
 package com.melonbar.exchange.coinbase.model.order;
 
+import com.melonbar.core.model.ProductId;
 import com.melonbar.exchange.coinbase.annotation.BodyField;
-import com.melonbar.exchange.coinbase.model.core.ProductId;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderSide;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderStop;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderType;
 import com.melonbar.exchange.coinbase.model.order.flag.SelfTradePrevention;
-import com.melonbar.exchange.coinbase.model.request.BaseRequest;
+import com.melonbar.core.http.request.BaseRequest;
 import lombok.Builder;
 
 import java.math.BigDecimal;

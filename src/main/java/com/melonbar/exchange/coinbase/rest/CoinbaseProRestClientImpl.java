@@ -1,15 +1,11 @@
 package com.melonbar.exchange.coinbase.rest;
 
-import com.melonbar.exchange.coinbase.rest.api.authenticated.accounts.AccountsApi;
-import com.melonbar.exchange.coinbase.rest.api.authenticated.fills.FillsApi;
-import com.melonbar.exchange.coinbase.rest.api.authenticated.oracle.OracleApi;
-import com.melonbar.exchange.coinbase.rest.api.authenticated.orders.OrdersApi;
-import com.melonbar.exchange.coinbase.rest.api.marketdata.MarketDataApi;
+import com.melonbar.core.http.response.Response;
+import com.melonbar.core.util.Guard;
+import com.melonbar.core.util.request.Pagination;
+import com.melonbar.exchange.coinbase.model.account.AccountsRequest;
 import com.melonbar.exchange.coinbase.model.fills.ListFillsRequest;
 import com.melonbar.exchange.coinbase.model.oracle.OracleRequest;
-import com.melonbar.exchange.coinbase.model.products.ProductCandlesRequest;
-import com.melonbar.exchange.coinbase.model.response.Response;
-import com.melonbar.exchange.coinbase.model.account.AccountsRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelAllOrdersRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelOrderByApiKeyRequest;
 import com.melonbar.exchange.coinbase.model.order.CancelOrderByOrderIdRequest;
@@ -18,8 +14,12 @@ import com.melonbar.exchange.coinbase.model.order.GetOrderByOrderIdRequest;
 import com.melonbar.exchange.coinbase.model.order.LimitOrderRequest;
 import com.melonbar.exchange.coinbase.model.order.ListOrdersRequest;
 import com.melonbar.exchange.coinbase.model.order.MarketOrderRequest;
-import com.melonbar.exchange.coinbase.util.Guard;
-import com.melonbar.exchange.coinbase.util.request.Pagination;
+import com.melonbar.exchange.coinbase.model.products.ProductCandlesRequest;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.accounts.AccountsApi;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.fills.FillsApi;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.oracle.OracleApi;
+import com.melonbar.exchange.coinbase.rest.api.authenticated.orders.OrdersApi;
+import com.melonbar.exchange.coinbase.rest.api.marketdata.MarketDataApi;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 

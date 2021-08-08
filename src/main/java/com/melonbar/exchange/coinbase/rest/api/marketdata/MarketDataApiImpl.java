@@ -2,15 +2,15 @@ package com.melonbar.exchange.coinbase.rest.api.marketdata;
 
 import com.melonbar.exchange.coinbase.rest.api.resource.Resource;
 import com.melonbar.exchange.coinbase.enrichment.Enricher;
-import com.melonbar.exchange.coinbase.http.Http;
-import com.melonbar.exchange.coinbase.http.HttpClient;
+import com.melonbar.core.http.Http;
+import com.melonbar.core.http.HttpClient;
 import com.melonbar.exchange.coinbase.model.currencies.CurrenciesRequest;
 import com.melonbar.exchange.coinbase.model.currencies.CurrencyByIdRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductByIdRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductCandlesRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductOrderBookRequest;
 import com.melonbar.exchange.coinbase.model.products.ProductRequest;
-import com.melonbar.exchange.coinbase.model.response.Response;
+import com.melonbar.core.http.response.Response;
 
 public record MarketDataApiImpl(HttpClient httpClient, Enricher requestEnricher) implements MarketDataApi {
 

@@ -1,9 +1,9 @@
 package com.melonbar.exchange.coinbase.rest;
 
-import com.melonbar.exchange.coinbase.http.Http;
-import com.melonbar.exchange.coinbase.http.HttpClient;
+import com.melonbar.core.http.Http;
+import com.melonbar.core.http.HttpClient;
 import com.melonbar.exchange.coinbase.model.request.DebugRequest;
-import com.melonbar.exchange.coinbase.model.response.Response;
+import com.melonbar.core.http.response.Response;
 import com.melonbar.exchange.coinbase.rest.api.authenticated.accounts.AccountsApi;
 import com.melonbar.exchange.coinbase.rest.api.authenticated.fills.FillsApi;
 import com.melonbar.exchange.coinbase.rest.api.authenticated.oracle.OracleApi;

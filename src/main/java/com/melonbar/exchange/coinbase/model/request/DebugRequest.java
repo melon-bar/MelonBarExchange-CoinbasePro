@@ -1,6 +1,7 @@
 package com.melonbar.exchange.coinbase.model.request;
 
-import com.melonbar.exchange.coinbase.http.Http;
+import com.melonbar.core.http.request.BaseRequest;
+import com.melonbar.core.http.Http;
 import com.melonbar.exchange.coinbase.util.AppConfig;
 
 public class DebugRequest extends BaseRequest {

@@ -1,8 +1,8 @@
 package com.melonbar.exchange.coinbase.websocket.message.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.melonbar.core.util.Guard;
 import com.melonbar.exchange.coinbase.model.order.flag.OrderSide;
-import com.melonbar.exchange.coinbase.util.Guard;
 import lombok.Builder;
 
 import java.math.BigDecimal;

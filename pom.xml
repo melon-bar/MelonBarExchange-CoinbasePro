@@ -31,6 +31,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.melonbar.core</groupId>
+            <artifactId>melon-bar-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- Used for its convenient basic utility functions. -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -61,14 +67,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-ext</artifactId>
-            <version>1.7.30</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- SLF4J API, strong dependency on this for this package's formatting utility implementation. -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>
             <scope>compile</scope>
         </dependency>

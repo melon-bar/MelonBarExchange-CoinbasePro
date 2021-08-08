@@ -1,7 +1,7 @@
 package com.melonbar.exchange.coinbase.model.account;
 
 import com.melonbar.exchange.coinbase.annotation.RequestField;
-import com.melonbar.exchange.coinbase.model.request.BaseRequest;
+import com.melonbar.core.http.request.BaseRequest;
 import lombok.Builder;
 
 /**

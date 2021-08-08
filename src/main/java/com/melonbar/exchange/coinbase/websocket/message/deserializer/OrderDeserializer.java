@@ -3,7 +3,7 @@ package com.melonbar.exchange.coinbase.websocket.message.deserializer;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.melonbar.exchange.coinbase.util.Format;
+import com.melonbar.core.util.Format;
 import com.melonbar.exchange.coinbase.websocket.message.model.L2OrderTuple;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
